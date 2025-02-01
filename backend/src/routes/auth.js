@@ -53,7 +53,10 @@ authRoutes.post('/local/signup', async (req, res) => {
     const token = jwt.sign(
       { sub: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '7d' ,
+        algorithm: 'HS256'
+      },
+      
     );
 
     // Set cookie
@@ -85,7 +88,9 @@ authRoutes.post('/local/login', (req, res, next) => {
     const token = jwt.sign(
       { sub: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '7d' ,
+        algorithm: 'HS256'
+      }
     );
 
     // Set cookie
@@ -126,7 +131,9 @@ authRoutes.post('/google', async (req, res) => {
     const token = jwt.sign(
       { sub: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '7d' ,
+        algorithm: 'HS256'
+      }
     );
 
     // Set cookie
@@ -150,7 +157,7 @@ authRoutes.get('/me', async (req, res) => {
     
     if (!token) return res.status(401).json({ authenticated: false });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.decode(token, process.env.JWT_SECRET)
     const user = await User.findById(decoded.sub).select('-__v');
 
     if (!user) return res.status(401).json({ authenticated: false });

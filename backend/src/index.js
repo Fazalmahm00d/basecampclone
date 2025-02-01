@@ -9,6 +9,11 @@ const passport = require('passport');
 const userRoutes = require('./routes/user');
 const inviteRouter = require('./routes/invite');
 const bodyParser = require('body-parser');
+const authMiddleware = require('./middleware/authMiddleWare');
+const messageRoutes = require('./routes/message');
+const accountRouter = require('./routes/account');
+const projectRouter = require('./routes/project');
+const todoRouter = require('./routes/todos');
 require('./config/passport-local');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,6 +70,10 @@ mongoose
 app.use('/api', inviteRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/users',userRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/account", accountRouter);
+app.use("/api/projects",projectRouter);
+app.use("/api/todos",todoRouter)
 
 // Basic route
 app.get('/api/health', (req, res) => {

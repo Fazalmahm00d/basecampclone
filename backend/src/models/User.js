@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   firebaseUid: { type: String, sparse: true }, // Sparse index
   profilePicture: { type: String }, // Optional for both
   organizationName: { type: String, ref: 'Account', default: null }, // Organization the user belongs to
-  role: { type: String, enum: ['admin', 'organization_member', 'external_collaborator', 'client'], default: 'admin' }, // Role in the system
+  role: { type: String, enum: ['admin', 'member', 'external_collaborator', 'client'], default: 'admin' }, // Role in the system
   invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Who invited this user
   status: { type: String, enum: ['active', 'pending', 'inactive'], default: 'pending' }, // Invitation status
   accounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Account' }], // Accounts the user belongs to

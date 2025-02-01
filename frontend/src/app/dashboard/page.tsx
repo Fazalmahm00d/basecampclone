@@ -3,6 +3,7 @@ import RecentlyVisited from "@/components/dashboard-components/RecentlyVisited";
 import Schedule from "@/components/dashboard-components/Schedule";
 import ActionButtons from "@/components/dashboard-components/Button";
 import { Separator } from "@/components/ui/separator";
+import ProjectGrid from "@/components/dashboard-components/ProjectGrid";
 
 export default function DashBoard() {
   return (
@@ -11,6 +12,7 @@ export default function DashBoard() {
       <Separator/>
       <div className="">
         <RecentlyVisited />
+        <ProjectGrid/>
       <div className="flex justify-center">
         <Schedule />
         <Assignments />

@@ -48,10 +48,12 @@ const InvitationPage = () => {
           
           if (response.data) {
             setUserInfo(response.data);
+            console.log(response.data,"user info after verify invite")
             setIsPasswordDialogOpen(true);
           }
         } catch (error) {
           if (axios.isAxiosError(error)) {
+            console.log("error",error)
             setError(error.response?.data?.error || "Invalid or expired invitation link.");
           } else {
             setError("An unexpected error occurred.");

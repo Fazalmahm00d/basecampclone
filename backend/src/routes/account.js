@@ -120,6 +120,7 @@ accountRouter.put('/:accountId/members/:userId/role', async (req, res) => {
   }
 });
 
+
 // 4. List All Members in an Account
 accountRouter.get('/:accountId/members', async (req, res) => {
   const { accountId } = req.params;
@@ -152,6 +153,34 @@ accountRouter.get('/:accountId/members/:userId', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });
+  }
+});
+
+accountRouter.get("/members/:organizationName", async (req, res) => {
+  console.log("get member calling")
+  const organizationName=req.params.organizationName
+  try {
+    console.log(organizationName,"admin org")
+    const account = await Account.findOne({name: organizationName})
+      .populate("members", "username email role") // Populate with relevant user fields
+      .lean(); // Use lean() for better performance when we only need JSON data
+    console.log("account found",account)
+    if (!account) {
+      return res.status(404).json({ error: "Organization not found" });
+    }
+
+    // Transform the data to include only necessary fields
+    const members = account.members.map(member => ({
+      _id: member._id,
+      username: member.username,
+      email: member.email,
+      role: member.role
+    }));
+
+    res.status(200).json(members);
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

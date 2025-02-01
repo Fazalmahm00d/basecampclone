@@ -2,214 +2,237 @@ const express = require('express');
 const inviteRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Account = require('../models/Account');
 const authMiddleware = require('../middleware/authMiddleWare');
+const nodemailer = require('nodemailer');
+const Account = require('../models/Account');
+require('dotenv').config();
 
-// Separate middleware for invite token verification
-// const inviteTokenMiddleware = async (req, res, next) => {
-//   try {
-//     const authHeader = req.headers.authorization;
-//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-//       return res.status(401).json({ error: 'Invite token missing.' });
-//     }
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
-//     const token = authHeader.split(' ')[1];
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-//     // Attach decoded data to request
-//     req.inviteData = decoded;
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ error: 'Invalid or expired invite token.' });
-//   }
-// };
-const verifyInviteToken = (token) => {
-    try {
-      return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-      console.error('Token verification error:', error);
-      return null;
+// Generate invite token with admin and account info
+const generateInviteToken = (payload) => {
+  const token = jwt.sign(
+    {
+      ...payload,
+      type: 'invite'
+    },
+    process.env.JWT_SECRET,
+    { 
+      expiresIn: '7d',
+      algorithm: 'HS256'
     }
-  };
-  const generateInviteToken = (payload) => {
-    // Use the same JWT_SECRET for all operations
-    const token = jwt.sign(
-      {
-        ...payload,
-        type: 'invite' // Add type to distinguish from auth tokens
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-    
-    // Log the token generation (remove in production)
-    console.log('Generated token with secret:', {
-      secret: process.env.JWT_SECRET?.substring(0, 3) + '...', // Only log first 3 chars
-      payload
+  );
+  return token;
+};
+
+// Verify invite token
+const verifyInviteToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ['HS256']
     });
     
-    return token;
-  };
-
-  inviteRouter.post('/invite', authMiddleware, async (req, res) => {
-    try {
-      const { email, role = 'member' } = req.body;
-  
-      if (!email) {
-        return res.status(400).json({ error: 'Email is required.' });
-      }
-  
-      // Generate a new invite token
-      const token = generateInviteToken({ 
-        email,
-        role,
-        accountId: req.user.accounts[0] // Assuming first account
-      });
-      const account = await Account.findOne({ admin: req.user._id });
-      
-      // Create the invitation URL
-      const inviteUrl = `http://localhost:3000/invite?token=${token}`;
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: `You've been invited to ${account.name}!`,
-        html: `
-          <h2>Welcome to ${account.name}!</h2>
-          <p>You've been invited as a <strong>${role}</strong>.</p>
-          <p>Click the link below to accept the invitation:</p>
-          <a href="${invitationURL}">Accept Invitation</a>
-        `,
-      };
-  
-      // Send email
-      await transporter.sendMail(mailOptions);
-  
-      res.status(200).json({ 
-        message: 'Invitation created successfully',
-        inviteUrl,
-        token // Remove this in production
-      });
-  
-    } catch (error) {
-      console.error('Failed to create invitation:', error);
-      res.status(500).json({ error: 'Failed to create invitation' });
+    if (decoded.type !== 'invite') {
+      throw new Error('Invalid token type');
     }
-  });
+    
+    return decoded;
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return null;
+  }
+};
 
+// Send invite route
+inviteRouter.post('/invite', authMiddleware, async (req, res) => {
+  try {
+    const { adminemail,email, role = 'member',organizationName } = req.body;
 
-// Route to verify invitation (uses invite token middleware)
+    console.log(req.user,"user sending invite")
+    const receiverId = req.user._id;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required.' });
+    }
+
+    // Find the admin's account
+    const adminUser = await User.findOne({ email: adminemail });
+    if (!adminUser) {
+      return res.status(404).json({ error: 'Admin user not found.' });
+    }
+
+    // Find the account where this admin is the admin - use _id directly
+    const account = await Account.findOne({ admin: adminUser._id });
+
+    // Generate token with admin and account info
+    const token = generateInviteToken({ 
+      email,
+      role,
+      organizationName,
+      accountId: account._id,
+      adminId:adminUser._id,
+      receiverId: receiverId,
+      accountName: account.name
+    });
+
+    // Create invitation URL
+    const inviteUrl = `http://localhost:3000/invite?token=${token}`;
+    
+    // Setup email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `You've been invited to join ${organizationName}!`,
+      html: `
+        <h2>Welcome to ${organizationName}!</h2>
+        <p>You've been invited as a <strong>${role}</strong>.</p>
+        <p>Click the link below to accept the invitation:</p>
+        <a href="${inviteUrl}">Accept Invitation</a>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ 
+      message: 'Invitation sent successfully',
+      inviteUrl
+    });
+
+  } catch (error) {
+    console.error('Failed to create invitation:', error);
+    res.status(500).json({ error: 'Failed to create invitation' });
+  }
+});
+
+// Verify invite route
 inviteRouter.get('/verify-invite', async (req, res) => {
-    try {
-      const { token } = req.query;
-      console.log('Received token for verification:', token);
-  
-      if (!token) {
-        return res.status(400).json({ error: 'Token is required.' });
-      }
-  
-      // Log the verification attempt (remove in production)
-      console.log('Attempting verification with secret:', {
-        secret: process.env.JWT_SECRET?.substring(0, 3) + '...' // Only log first 3 chars
-      });
-  
-      // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log('Successfully decoded token:', decoded);
-  
-      // Additional validation
-      if (!decoded.email) {
-        return res.status(400).json({ error: 'Invalid token format: missing email' });
-      }
-  
-      res.status(200).json({
-        email: decoded.email,
-        role: decoded.role || 'member',
-        accountId: decoded.accountId
-      });
-    } catch (error) {
-      console.error('Token verification failed:', error);
-      res.status(401).json({ error: 'Invalid or expired invitation token.' });
-    }
-  });
-// Route to accept invitation (uses invite token middleware)
-inviteRouter.post('/accept-invite', async (req, res) => {
+  try {
+    const { token } = req.query;
 
-    try {
-        console.log('Processing invite acceptance...');
-    const { token, password } = req.body;
-  
-      if (!token || !password) {
-        return res.status(400).json({ error: 'Token and password are required.' });
-      }
-  
-      // Verify the token
-      const decoded = verifyInviteToken(token);
-      if (!decoded) {
-        return res.status(401).json({ error: 'Invalid or expired invitation token.' });
-      }
-  
-      // Check if user already exists
-      let user = await User.findOne({ email: decoded.email });
-      if (user) {
-        return res.status(400).json({ error: 'User already exists.' });
-      }
-  
-      // Check if account exists
-      const account = await Account.findById(decoded.accountId);
-      if (!account) {
-        return res.status(404).json({ error: 'Account not found.' });
-      }
-  
-      // Create new user
-      user = new User({
-        email: decoded.email,
-        password,
-        role: decoded.role,
-        provider: 'local',
-        accounts: [decoded.accountId],
-        status: 'active'
-      });
-  
-      await user.save();
-  
-      // Add user to account
-      account.members.push(user._id);
-      await account.save();
-  
-      // Generate auth token
-      const authToken = jwt.sign(
-        { userId: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-      );
-  
-      res.status(200).json({
-        message: 'Registration successful',
-        token: authToken
-      });
-    } catch (error) {
-        console.error('Accept invite error:', error);
-        res.status(500).json({ 
-          error: 'Failed to process invitation.',
-          details: error.message 
-        });
+    if (!token) {
+      return res.status(400).json({ error: 'Token is required.' });
     }
-  });
+
+    const decoded = verifyInviteToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Invalid or expired invitation token.' });
+    }
+
+    res.status(200).json({
+      email: decoded.email,
+      role: decoded.role,
+      accountId: decoded.accountId,
+      accountName: decoded.accountName,
+      organizationName: decoded.organizationName,
+      adminId: decoded.adminId
+    });
+  } catch (error) {
+    console.error('Token verification failed:', error);
+    res.status(401).json({ error: 'Invalid or expired invitation token.' });
+  }
+});
+
+// Accept invite route
+inviteRouter.post('/accept-invite', async (req, res) => {
+  try {
+    console.log('Processing invite acceptance...');
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ error: 'Token and password are required.' });
+    }
+
+    // Verify token
+    const decoded = verifyInviteToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Invalid or expired invitation token.' });
+    }
+    console.log(decoded,"decoded in accept invite")
+    // Check if user already exists
+    let user = await User.findOne({ email: decoded.email });
+    if (user) {
+      return res.status(400).json({ error: 'User already exists.' });
+    }
+    
+    // Find the account
+    const account = await Account.findOne({admin: decoded.adminId});
+    console.log(account,"account found")
+    if (!account) {
+      return res.status(404).json({ error: 'Account not found.' });
+    }
+
+    // Create new user
+    user = new User({
+      email: decoded.email,
+      password,
+      role: decoded.role,
+      organizationName: decoded.organizationName,
+      provider: 'local',
+      accounts: [decoded.accountId],
+      status: 'active'
+    });
+
+    await user.save();
+    console.log('New user created:', user._id);
+
+    // Add user to account members
+    account.members.push(user._id);
+    await account.save();
+    console.log('User added to account:', account._id);
+
+    // Generate auth token
+    const authToken = jwt.sign(
+      { 
+        userId: user._id,
+        email: user.email,
+        role: user.role,
+        organizationName: decoded.organizationName,
+        accountId: decoded.accountId
+      },
+      process.env.JWT_SECRET,
+      { 
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      }
+    );
+
+    res.status(200).json({
+      message: 'Registration successful',
+      token: authToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        accountId: decoded.accountId,
+        organizationName: decoded.organizationName,
+        accountName: decoded.accountName
+      }
+    });
+
+  } catch (error) {
+    console.error('Accept invite error:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ error: 'Invalid invitation token.' });
+    } else if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Invitation token has expired.' });
+    }
+    
+    res.status(500).json({ 
+      error: 'Failed to process invitation.',
+      details: error.message
+    });
+  }
+});
 
 module.exports = inviteRouter;
-
-
-// routes/invite.js
-
-// Separate middleware for invite token verification
-
-
-// Public route - Verify invite token
-
-
-// Public route - Accept invitation
-
-
-// Protected route - Send invitation (requires authentication)
-
-

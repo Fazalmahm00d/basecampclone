@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
 import axios from "axios";
+import ProjectForm from "../project-components/ProjectForm";
 
 export default function ActionButtons() {
   const user = useSelector((state: RootState) => state.user);
@@ -12,10 +13,13 @@ export default function ActionButtons() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [orgName,setOrgName]=useState("")
   const [role, setRole] = useState("member");
   const [loading, setLoading] = useState(false);
+  
   const [error, setError] = useState("");
 
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -29,7 +33,7 @@ export default function ActionButtons() {
 
       const response = await axios.post(
         'http://localhost:5000/api/invite',
-        { email, role, organizationName: isUserOrg },
+        { adminemail:user.email,email, role, organizationName:orgName},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +62,13 @@ export default function ActionButtons() {
       </div>
       <h1 className="text-center font-bold text-2xl">{isUserOrg}</h1>
       <div className="flex items-center space-x-4 p-4 w-full justify-center">
-        <Button>Make a new project</Button>
+        
+        <div> <Dialog><DialogTrigger asChild>
+          <Button>Make a new project</Button>
+            </DialogTrigger>
+            <DialogContent><ProjectForm /><DialogClose asChild>
+                <Button variant="outline">Close</Button>
+              </DialogClose></DialogContent></Dialog></div>
         <div>
           <Dialog>
             <DialogTrigger asChild>
@@ -91,6 +101,16 @@ export default function ActionButtons() {
                   />
                 </div>
                 <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Organization Name</label>
+                  <input
+                    type="text"
+                    className="w-full mt-1 border rounded-md p-2"
+                    value={orgName}
+                    onChange={(e) => setOrgName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">Role</label>
                   <select
                     className="w-full mt-1 border rounded-md p-2"
@@ -102,6 +122,7 @@ export default function ActionButtons() {
                     <option value="client">Client</option>
                   </select>
                 </div>
+
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 <div className="flex justify-end">
                   <Button
