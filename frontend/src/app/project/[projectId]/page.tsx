@@ -68,7 +68,9 @@ export default function ProjectPage() {
   const handleToDoNavigate= ()=>{
     router.push(`/todos/${params.projectId}`)
   }
-
+  const handleEventNavigate= ()=>{
+    router.push(`/calendar/${params.projectId}`)
+  }
   const params = useParams();
   console.log(params,"params"); 
   useEffect(() => {
@@ -276,7 +278,7 @@ export default function ProjectPage() {
         </Card>
 
         {/* Schedule Card */}
-        <Card className="hover:shadow-md transition-shadow">
+        <Card onClick={handleEventNavigate} className="hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-xl">Schedule</CardTitle>
           </CardHeader>

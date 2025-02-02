@@ -14,6 +14,7 @@ const messageRoutes = require('./routes/message');
 const accountRouter = require('./routes/account');
 const projectRouter = require('./routes/project');
 const todoRouter = require('./routes/todos');
+const eventRouter = require('./routes/event');
 require('./config/passport-local');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -73,7 +74,8 @@ app.use('/api/users',userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/account", accountRouter);
 app.use("/api/projects",projectRouter);
-app.use("/api/todos",todoRouter)
+app.use("/api/todos",todoRouter);
+app.use("/api/event",eventRouter)
 
 // Basic route
 app.get('/api/health', (req, res) => {
