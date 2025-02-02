@@ -1,9 +1,8 @@
-require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const http = require('http');
 const authRoutes = require('./routes/auth');
 const passport = require('passport');
 const userRoutes = require('./routes/user');
@@ -15,38 +14,46 @@ const accountRouter = require('./routes/account');
 const projectRouter = require('./routes/project');
 const todoRouter = require('./routes/todos');
 const eventRouter = require('./routes/event');
+const grpchatRouter = require('./routes/groupchats');
+const initializeGroupChat = require('./socket');
+// Remove this line since we're not using it anymore
+// const initializeSocket = require('./socket');
 require('./config/passport-local');
+require('dotenv').config();
+
 const app = express();
+const server = http.createServer(app);
+// Remove this line
+// const io = initializeSocket(server);
+const groupChatIo = initializeGroupChat(server);
+
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error('MONGODB_URI environment variable is not defined');
 }
- // Import your local strategy
- if (!process.env.JWT_SECRET) {
+
+if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET is not set in environment variables!');
   process.exit(1);
 }
 
 console.log('Server starting with JWT_SECRET:', process.env.JWT_SECRET?.substring(0, 3) + '...');
-// Initialize Passport
-app.use(passport.initialize())
 
-// Middleware
+app.use(passport.initialize());
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend URL
-  credentials: true // Allow credentials (cookies)
+  origin: 'http://localhost:3000',
+  credentials: true
 }));
 
 app.use(bodyParser.json());
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
 app.use(express.json());
 app.use(cookieParser());
+
+// Remove this line since we're not using the general io anymore
+// app.set('io', io);
 
 // MongoDB Connection
 mongoose
@@ -57,25 +64,20 @@ mongoose
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error.message);
   });
-  inviteRouter.use((req, res, next) => {
-    console.log('Invite Route:', {
-      method: req.method,
-      path: req.path,
-      query: req.query,
-      body: req.body,
-      headers: req.headers
-    });
-    next();
-  });
+
 // Routes
 app.use('/api', inviteRouter);
 app.use('/api/auth', authRoutes);
-app.use('/api/users',userRoutes);
+app.use('/api/users', userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/account", accountRouter);
-app.use("/api/projects",projectRouter);
-app.use("/api/todos",todoRouter);
-app.use("/api/event",eventRouter)
+app.use("/api/projects", projectRouter);
+app.use("/api/todos", todoRouter);
+app.use("/api/event", eventRouter);
+app.use("/api/groupchat", (req, res, next) => {
+  req.io = groupChatIo;
+  next();
+}, grpchatRouter);
 
 // Basic route
 app.get('/api/health', (req, res) => {
@@ -88,7 +90,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
-// Start server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -1,10 +1,14 @@
 // models/GroupChat.js
+
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  sender: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User',  // Make sure this is correctly referenced
+    required: true 
+  },
   content: { type: String, required: true },
-  attachments: [{ type: String }], // URLs to attached files
   readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 

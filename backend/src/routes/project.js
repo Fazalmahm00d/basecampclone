@@ -3,6 +3,7 @@ const Project = require('../models/Project');
 const projectRouter=express.Router()
 const Account = require("../models/Account");
 const authMiddleware = require('../middleware/authMiddleWare');
+const GroupChat = require('../models/GroupChat');
 
 projectRouter.post('/share-project', async (req, res) => {
     const { projectId, userId } = req.body;
@@ -99,6 +100,10 @@ projectRouter.post("/", async (req, res) => {
       account: account._id,
       members: members || [], // Assign selected members
     });
+    await GroupChat.create({
+      project: newProject._id,
+      participants: newProject.members
+    });
 
     await newProject.save();
 
@@ -135,4 +140,15 @@ projectRouter.put("/:projectId/members", authMiddleware, async (req, res) => {
   }
 });
 
+projectRouter.get("/:projectId/messages",async(req,res)=>{
+  const  projectId  = req.params.projectId;
+  
+  const chat = await GroupChat.findOne({ project: projectId })
+    .populate({
+      path: 'messages.sender',
+      select: '_id username'
+    });
+    
+  res.json(chat.messages);
+})
 module.exports = projectRouter;

@@ -71,6 +71,9 @@ export default function ProjectPage() {
   const handleEventNavigate= ()=>{
     router.push(`/calendar/${params.projectId}`)
   }
+  const handleGrpChatNavigate= ()=>{
+    router.push(`/group-chats/${params.projectId}`)
+  }
   const params = useParams();
   console.log(params,"params"); 
   useEffect(() => {
@@ -258,7 +261,7 @@ export default function ProjectPage() {
       {/* Bottom Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Chat Card */}
-        <Card className="hover:shadow-md transition-shadow">
+        <Card onClick={handleGrpChatNavigate} className="hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-xl">Chat</CardTitle>
           </CardHeader>
