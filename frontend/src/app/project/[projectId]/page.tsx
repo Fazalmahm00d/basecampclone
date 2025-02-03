@@ -15,6 +15,9 @@ import {
 import { Progress } from "@/components/ui/progress";
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
+import ProjectMemberDialog from '@/components/project-components/ProjectMemberDialog';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface Member {
   _id: string;
@@ -58,6 +61,7 @@ function getRandomPastelColor(text: string): string {
 export default function ProjectPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+  const user = useSelector((state: RootState) => state.user);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -76,6 +80,23 @@ export default function ProjectPage() {
   }
   const params = useParams();
   console.log(params,"params"); 
+
+  const handleMemberUpdate = async (selectedMembers: string[]) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/projects/${project?._id}/members`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ members: selectedMembers })
+      });
+
+      if (response.ok) {
+        const updatedProject = await response.json();
+        setProject(updatedProject.project);
+      }
+    } catch (error) {
+      console.error('Failed to update project members:', error);
+    }
+  };
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -168,9 +189,12 @@ export default function ProjectPage() {
 
         {/* Team Members */}
         <div className="flex items-center gap-2 mb-8">
-          <Button variant="outline" className="rounded-full">
-            Set up people
-          </Button>
+              <ProjectMemberDialog
+            organizationName={user.organizationName}
+            projectId={project._id}
+            currentMembers={project.members.map(m => m._id)}
+            onMemberUpdate={handleMemberUpdate}
+          />
           <div className="flex flex-wrap gap-1">
             {project.members.map((member) => (
               <div

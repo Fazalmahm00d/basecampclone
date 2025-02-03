@@ -16,6 +16,8 @@ const todoRouter = require('./routes/todos');
 const eventRouter = require('./routes/event');
 const grpchatRouter = require('./routes/groupchats');
 const initializeGroupChat = require('./socket');
+const initializeDirectChat = require('./singleSocket');
+const directMessageRouter = require('./routes/directchat');
 // Remove this line since we're not using it anymore
 // const initializeSocket = require('./socket');
 require('./config/passport-local');
@@ -26,6 +28,9 @@ const server = http.createServer(app);
 // Remove this line
 // const io = initializeSocket(server);
 const groupChatIo = initializeGroupChat(server);
+const directChatIo = initializeDirectChat(server);
+
+
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -78,7 +83,14 @@ app.use("/api/groupchat", (req, res, next) => {
   req.io = groupChatIo;
   next();
 }, grpchatRouter);
-
+app.use("/api/direct-messages", (req, res, next) => {
+  console.log("Socket IO state:", {
+    hasIO: !!req.io,
+    ioConnectedUsers: req.io?.connectedUsers ? Array.from(req.io.connectedUsers.entries()) : 'No users map'
+  });
+  req.io = directChatIo;
+  next();
+}, directMessageRouter);
 // Basic route
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

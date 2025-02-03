@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/reused-components/Header";
 import { Provider } from 'react-redux';
 import { store } from '../redux/store'; 
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Provider store={store}>
         <Header />
         {children}
+        <Toaster/>
         </Provider> 
       </body>
     </html>

@@ -61,16 +61,11 @@ eventRouter.get('/projects/:projectId/events',async (req, res) => {
 // });
 
 // Get all events for an account (organization)
-eventRouter.get('/accounts/:accountId/events', async (req, res) => {
+eventRouter.get('/accounts/:organizationName/events', async (req, res) => {
   try {
-    // Check if user has access to the account
-    const hasAccess = req.user.accounts.includes(req.params.accountId);
-    if (!hasAccess) {
-      return res.status(403).json({ message: 'Access denied' });
-    }
 
     const events = await Event.find({ 
-      account: req.params.accountId 
+      organizationName: req.params.organizationName
     })
     .populate('project', 'name')
     .populate('createdBy', 'username email')

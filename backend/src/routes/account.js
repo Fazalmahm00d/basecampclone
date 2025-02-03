@@ -10,12 +10,38 @@ const accountRouter = express.Router();
 const validateAccountAndUser = async (accountId, userId) => {
   const account = await Account.findById(accountId).populate('members');
   const user = await User.findById(userId);
-
   if (!account) throw new Error('Account not found.');
   if (!user) throw new Error('User not found.');
 
   return { account, user };
 };
+
+accountRouter.get("/id/:organizationName", async (req, res) => {
+  try {
+    const { organizationName } = req.params;
+    console.log("Fetching account ID for organization:", organizationName);
+
+    // Find the account by organization name
+    const account = await Account.findOne({ name: organizationName })
+      .select('_id name')
+      .lean();
+
+    if (!account) {
+      console.log("No account found for organization:", organizationName);
+      return res.status(404).json({ error: "Organization not found" });
+    }
+
+    console.log("Found account:", account);
+    res.status(200).json({
+      accountId: account._id,
+      name: account.name
+    });
+
+  } catch (error) {
+    console.error("Error fetching account ID:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 accountRouter.post('/', async (req, res) => {
     const { name, adminId } = req.body;
@@ -143,9 +169,15 @@ accountRouter.get('/:accountId/members/:userId', async (req, res) => {
   const { accountId, userId } = req.params;
 
   try {
-    const { account, user } = await validateAccountAndUser(accountId, userId);
+    const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    if (!account.members.includes(userId)) {
+    const { account, user } = await validateAccountAndUser(accountId, userObjectId);
+
+    console.log(account.members, userId, "finding user ....");
+
+    // Fix: Ensure userObjectId is compared properly with members' ObjectIds
+    const isMember = account.members.some(member => member._id.equals(userObjectId));
+    if (!isMember) {
       return res.status(404).json({ error: 'User is not a member of this account.' });
     }
 
