@@ -18,10 +18,15 @@ const grpchatRouter = require('./routes/groupchats');
 const initializeGroupChat = require('./socket');
 const initializeDirectChat = require('./singleSocket');
 const directMessageRouter = require('./routes/directchat');
+const { HfInference } = require('@huggingface/inference');
+const fileRouter = require('./routes/files');
+const adminRouter = require('./routes/admin');
+
 // Remove this line since we're not using it anymore
 // const initializeSocket = require('./socket');
 require('./config/passport-local');
-require('dotenv').config();
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -79,6 +84,10 @@ app.use("/api/account", accountRouter);
 app.use("/api/projects", projectRouter);
 app.use("/api/todos", todoRouter);
 app.use("/api/event", eventRouter);
+app.use("/api/files",fileRouter)
+app.use('/uploads', express.static('uploads'));
+app.use('/api/admin', adminRouter);
+
 app.use("/api/groupchat", (req, res, next) => {
   req.io = groupChatIo;
   next();

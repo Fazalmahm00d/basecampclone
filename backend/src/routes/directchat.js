@@ -4,6 +4,21 @@ const DirectMessage = require('../models/DirectMessage');
 const User = require('../models/User');
 const Account = require('../models/Account');
 const mongoose = require('mongoose');
+const { HfInference } = require('@huggingface/inference');
+
+require('dotenv').config();
+console.log("Hugging Face API Key:", process.env.HUGGINGFACE_API_KEY);
+
+const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+
+async function detectMood(text) {
+  const response = await hf.textClassification({
+    model: "j-hartmann/emotion-english-distilroberta-base",
+    inputs: text,
+  });
+
+  console.log(response); // Array of emotions with confidence scores
+}
 
 const directMessageRouter = express.Router();
 
@@ -132,7 +147,9 @@ directMessageRouter.post('/messages', async (req, res) => {
     try {
       const { recipientId, content, accountId,senderId } = req.body;
        // Assuming you have authentication middleware
-  
+       console.log(content,"content")
+      const sentiment=await detectMood(content);
+      console.log(sentiment,"sentiment")
       // Validate that both users are members of the account
       const account = await Account.findById(accountId);
       if (!account.members.includes(senderId) || !account.members.includes(recipientId)) {
@@ -143,7 +160,8 @@ directMessageRouter.post('/messages', async (req, res) => {
         sender: senderId,
         recipient: recipientId,
         content,
-        accountId
+        accountId,
+        sentiment:sentiment[0].label
       });
   
       await message.save();

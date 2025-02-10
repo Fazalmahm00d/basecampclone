@@ -2,6 +2,21 @@
 const socketIO = require('socket.io');
 const DirectMessage = require('./models/DirectMessage');
 const User = require('./models/User'); // Import User model
+const { HfInference } = require('@huggingface/inference');
+
+require('dotenv').config();
+console.log("Hugging Face API Key:", process.env.HUGGINGFACE_API_KEY);
+
+const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+
+async function detectMood(text) {
+  const response = await hf.textClassification({
+    model: "j-hartmann/emotion-english-distilroberta-base",
+    inputs: text,
+  });
+
+  return response // Array of emotions with confidence scores
+}
 
 function initializeDirectChat(server) {
   const io = socketIO(server, {
@@ -28,20 +43,23 @@ function initializeDirectChat(server) {
     // Handle direct messages
     socket.on('send-direct-message', async ({ senderId, recipientId, content, accountId }) => {
         try {
+          const sentiment=await detectMood(content);
+          console.log(sentiment,"sentiment")
           const message = new DirectMessage({
             sender: senderId,
             recipient: recipientId,
             content,
-            accountId
+            accountId,
+            sentiment:sentiment[0].label
           });
           await message.save();
       
           // Fetch sender details
-          const senderDetails = await User.findById(senderId).select('username profilePicture');
+          const sender = await User.findById(senderId).select('username profilePicture');
       
           const messageData = {
             ...message.toObject(),
-            senderDetails
+            sender
           };
       
           // Emit message to recipient if online

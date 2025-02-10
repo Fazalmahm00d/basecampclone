@@ -27,6 +27,9 @@ interface Message {
 
 export default function MessageDetail({ params }: { params: { projectId: string; msgId: string } }) {
     const [message, setMessage] = useState<Message | null>(null);
+    const [summary, setSummary] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
     const [replyContent, setReplyContent] = useState("");
     const [isReplying, setIsReplying] = useState(false);
     const router = useRouter();
@@ -35,6 +38,25 @@ export default function MessageDetail({ params }: { params: { projectId: string;
     useEffect(() => {
         fetchMessage();
     }, [params.msgId]);
+    const handleSummary = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setSummary(null);
+    
+        try {
+          const response = await axios.post('/api/summarize', {
+            messages: message?.content,
+          });
+    
+          // Get the summary from the response
+          setSummary(response.data.summary);
+        } catch (err) {
+          setError('Failed to summarize the message.');
+        } finally {
+          setLoading(false);
+        }
+      };
 
     const fetchMessage = async () => {
         try {
@@ -128,7 +150,14 @@ export default function MessageDetail({ params }: { params: { projectId: string;
                     </Button>
                 </div>
             </div>
-
+            <Button onClick={handleSummary}>{loading ? 'Summarizing...' : 'Summarize Message'}</Button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {summary && (
+                <div>
+                <h3>Summary:</h3>
+                <p>{summary}</p>
+                </div>
+            )}
             {/* Reply Form */}
             {isReplying && (
                 <div className="mb-8 bg-gray-50 p-6 rounded-lg">

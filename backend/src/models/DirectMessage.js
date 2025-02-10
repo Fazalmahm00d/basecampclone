@@ -16,6 +16,9 @@ const directMessageSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  sentiment:{
+    type:String
+  },
   readAt: { 
     type: Date, 
     default: null 

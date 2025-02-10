@@ -12,6 +12,13 @@ const TaskSchema = new Schema({
     isCompleted: { 
         type: Boolean, 
         default: false 
+    },
+    deadline:{
+        type:Date
+    },
+    assignedTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 

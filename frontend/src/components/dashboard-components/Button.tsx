@@ -58,7 +58,7 @@ export default function ActionButtons() {
   return (
     <div>
       <div className="flex justify-end w-full p-5">
-        <Button variant="outline">Adminland</Button>
+        <Button variant="outline" onClick={() => window.location.href = '/admin'}>Adminland</Button>
       </div>
       <h1 className="text-center font-bold text-2xl">{isUserOrg}</h1>
       <div className="flex items-center space-x-4 p-4 w-full justify-center">

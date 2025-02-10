@@ -23,6 +23,7 @@ interface Message {
     username:string;
     _id:string;
   }
+  sentiment: string;
   recipient: string;
   createdAt: string;
 }
@@ -37,6 +38,7 @@ function getInitials(name: string): string {
 }
 
 
+
 const SingleChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -48,6 +50,16 @@ const SingleChatInterface = () => {
   const user = useSelector((state: RootState) => state.user);
   const [currentUser, setCurrentUser] = useState<{ _id: string; username: string } | null>(null);
   	const [recipient, setRecipient] = useState<Member | null>(null);
+  const getSentimentEmoji = (sentiment: string): string => {
+    const emojiMap: Record<string, string> = {
+      joy: "😊",
+      anger: "😠",
+      sadness: "😢",
+      surprise: "😲",
+      neutral: "😐",
+    };
+    return emojiMap[sentiment] || ""; // Default emoji
+  };
   // Fetch user ID
   useEffect(() => {
     const fetchUserId = async () => {
@@ -67,6 +79,8 @@ const SingleChatInterface = () => {
     fetchUserId();
   }, [user?.email]);
 
+
+  
   // Socket connection and message handling
   useEffect(() => {
     if (!currentUser?._id) return;
@@ -91,12 +105,14 @@ const SingleChatInterface = () => {
     socket.on('new-direct-message', (newMessage: Message) => {
       console.log('Received new message:', newMessage);
       setMessages(prevMessages => [...prevMessages, newMessage]);
+      console.log(messages,"new msg set")
     });
   
     // Confirm message sent to sender (avoid duplicates)
     socket.on('message-sent-confirmation', (sentMessage: Message) => {
       console.log('Message sent confirmation:', sentMessage);
       setMessages(prevMessages => [...prevMessages, sentMessage]);
+      console.log(messages,"new msg set")
     });
   
     return () => {
@@ -186,14 +202,17 @@ const SingleChatInterface = () => {
             <div className={`max-w-[70%] p-3 rounded-lg ${message.sender._id === currentUser?._id ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}>
               <p>{message.content}</p>
               <span className="text-xs">{new Date(message.createdAt).toLocaleTimeString()}</span>
+              <span>{getSentimentEmoji(message?.sentiment)}</span>
             </div>
           </div>
         ))}
       </div>
 
       <form onSubmit={sendMessage} className="border-t p-4 flex">
-        <Input type="text" placeholder='Send a message...' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} className="flex-1 p-2 border rounded-lg" />
-        <Button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded-lg">Send</Button>
+        <Input type="text" placeholder='Send a message...' value={newMessage} onChange={(e) => {setNewMessage(e.target.value)
+         
+        }} className="flex-1 p-2 border rounded-lg" />
+        <Button  type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded-lg">Send</Button>
       </form>
     </div>
   );

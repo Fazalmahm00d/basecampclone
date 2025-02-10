@@ -13,7 +13,7 @@ export default function DashBoard() {
       <div className="">
         <RecentlyVisited />
         <ProjectGrid/>
-      <div className="flex justify-center">
+      <div className="flex gap-2 items-start justify-center">
         <Schedule />
         <Assignments />
       </div>

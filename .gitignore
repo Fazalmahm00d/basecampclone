@@ -1,0 +1,7 @@
+/ml/models/
+/ml/venv/
+.venv
+
+/ml/__pycache__/
+/ml/*.pyc
+/ml/
