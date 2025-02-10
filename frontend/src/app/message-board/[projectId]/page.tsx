@@ -80,10 +80,10 @@ export default function MessageBoard() {
                 {messages.map(msg => (
                     <li key={msg._id} 
                         onClick={() => router.push(`/message-board/${params.projectId}/${msg._id}`)}
-                        className="p-4 border rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                        className="p-4 border  rounded-lg cursor-pointer hover:bg-gray-100 transition">
                         
                         <strong className="text-blue-600">{msg.sender.username}</strong>:  
-                        <div dangerouslySetInnerHTML={{ __html: msg.content }} className="mt-2" />
+                        <div dangerouslySetInnerHTML={{ __html: msg.content }} className="mt-2 line-clamp-3 " />
                         
                         {msg.replies.length > 0 && (
                             <p className="text-sm text-gray-500">{msg.replies.length} Replies</p>

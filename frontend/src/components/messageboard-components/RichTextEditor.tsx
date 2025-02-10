@@ -110,7 +110,7 @@ export default function RichTextEditor({
             Numbered List
           </Button>
         </div>
-        <EditorContent editor={editor} className="prose max-w-none min-h-[150px]" />
+        <EditorContent editor={editor} className="prose max-w-none min-h-[150px] max-h-[300px] overflow-y-auto" />
       </div>
     </div>
   );

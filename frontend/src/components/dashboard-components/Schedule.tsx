@@ -24,12 +24,6 @@ interface Event {
   createdBy: { username: string };
 }
 
-
-
-
-
-
-
 export default function Schedule() {
   const [events, setEvents] = useState<Event[]>([]);
   const user = useSelector((state: RootState) => state.user);
@@ -58,14 +52,14 @@ export default function Schedule() {
       fetchEvents();
     }
   }, [user]);
+
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
 
     setSelectedDate(date);
     console.log(events,"events on click")
     const eventsOnDate = events.filter(event => {
-      // Convert all dates to a consistent format
-      const selectedDateString = date.toDateString(); // Example: "Wed Feb 05 2025"
+      const selectedDateString = date.toDateString();
       const eventStartString = event.start.toDateString();
       const eventEndString = event.end.toDateString();
     
@@ -73,7 +67,6 @@ export default function Schedule() {
     });
     console.log(eventsOnDate,"events on date")
     if (eventsOnDate.length > 0) {
-      // Show toast notification
       eventsOnDate.forEach(event => {
         toast(`📅 Event: ${event.title}`, {
           description: `🕒 ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}\n🏢 Project: ${event.project.name}\n👤 Created by: ${event.createdBy.username}`,
@@ -87,6 +80,7 @@ export default function Schedule() {
       });
     }
   };
+
   const eventDates = events.reduce((acc, event) => {
     const currentDate = new Date(event.start);
     while (currentDate <= event.end) {
@@ -95,6 +89,9 @@ export default function Schedule() {
     }
     return acc;
   }, new Map<string, boolean>());
+
+  const upcomingEvents = events.filter(event => new Date(event.end) >= new Date());
+
   return (
     <div className="p-4 flex">
       <div className="w-2/3 pr-4">
@@ -114,23 +111,22 @@ export default function Schedule() {
           <p>Start: {selectedEvent.start.toLocaleString()}</p>
           <p>End: {selectedEvent.end.toLocaleString()}</p>
         </div>
-
       )}
       <div className="w-1/3 pl-4 ">
-        <h3 className="font-bold mb-2">All Events</h3>
+        <h3 className="font-bold mb-2">Upcoming Events</h3>
         <div className='h-80 overflow-y-auto'>
-        {events.map(event => (
-          <div 
-            key={event._id} 
-            className="border-b py-2 cursor-pointer hover:bg-gray-100"
-            onClick={() => setSelectedEvent(event)}
-          >
-            <p className="font-semibold">{event.title}</p>
-            <p className="text-sm text-gray-600">
-              {event.start.toLocaleDateString()} - {event.end.toLocaleDateString()}
-            </p>
-          </div>
-        ))}
+          {upcomingEvents.map(event => (
+            <div 
+              key={event._id} 
+              className="border-b py-2 cursor-pointer hover:bg-gray-100"
+              onClick={() => setSelectedEvent(event)}
+            >
+              <p className="font-semibold">{event.title}</p>
+              <p className="text-sm text-gray-600">
+                {event.start.toLocaleDateString()} - {event.end.toLocaleDateString()}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -25,6 +25,13 @@ interface Member {
   email: string;
 }
 
+interface Task {
+  task_name: string;
+  task_description: string;
+  deadline?: string;
+  is_completed: boolean;
+}
+
 interface Project {
   _id: string;
   name: string;
@@ -32,6 +39,15 @@ interface Project {
   progress?: number;
   status?: string;
   lastUpdated?: string;
+}
+
+interface ProjectMetrics {
+  total_tasks: number;
+  completed_tasks: number;
+  completion_rate: number;
+  delayed_tasks: number;
+  high_risk_tasks: number;
+  recommendations: string[];
 }
 
 interface ProjectPageProps {
@@ -64,6 +80,14 @@ export default function ProjectPage() {
   const user = useSelector((state: RootState) => state.user);
   const { toast } = useToast();
   const router = useRouter();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [riskAnalysis, setRiskAnalysis] = useState<ProjectMetrics | null>(null);
+  const [riskLoading, setRiskLoading] = useState(false);
+  const [error, setError] = useState<null>(null);
+
+  const handleDocsNavigate=()=>{
+    router.push(`/docsnfiles/${params.projectId}`); 
+  }
 
   const handleMsgBoardNavigate = () => {
       router.push(`/message-board/${params.projectId}`); // Replace with actual projectId
@@ -97,6 +121,26 @@ export default function ProjectPage() {
       console.error('Failed to update project members:', error);
     }
   };
+  const analyzeRisk = async (e: React.FormEvent): Promise<ProjectMetrics | null> => {
+    e.preventDefault();
+    setRiskLoading(true);
+  
+    console.log(tasks, "tasks when called analysis");
+  
+    try {
+      // Adjusted the payload to not use `JSON.stringify()` when sending the `tasks` array directly
+      const response = await axios.post('/api/analyze', { tasks });
+      console.log(response,"response from anaylzing")
+      // Assuming response.data contains the analyzed result
+      setRiskAnalysis(response.data[0]);
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      return null; // You might want to handle this better depending on the use case
+    } finally {
+      setRiskLoading(false);
+    }
+  };
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -118,9 +162,20 @@ export default function ProjectPage() {
         setLoading(false);
       }
     };
+      const fetchTasks = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/projects/status/${params.projectId}/tasks`);
+            if (!response.ok) throw new Error('Failed to fetch tasks');
+            const data = await response.json();
+            setTasks(data);
+        } catch (err) {
+            console.log(err)
+        }
+    };
 
     if (params.projectId) {
       fetchProject();
+      fetchTasks();
     }
   }, [params.projectId, toast]);
 
@@ -174,7 +229,7 @@ export default function ProjectPage() {
         </div>
 
         {/* Progress Section */}
-        <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
+        {/* <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
           <div className="flex items-center gap-2 mb-2">
             <div className="rotate-90">
               <span className="block w-4 h-4 bg-green-500 rounded-sm" />
@@ -185,7 +240,61 @@ export default function ProjectPage() {
           <p className="text-sm text-gray-500 mt-2">
             {project.lastUpdated || 'Updated recently'}
           </p>
-        </div>
+        </div> */}
+        <Card>
+                <CardHeader>
+                    <h2 className="text-2xl font-bold">Risk Analysis</h2>
+                </CardHeader>
+                <CardContent>
+                    <div className="mb-4">
+                        <Button 
+                            onClick={(e)=>analyzeRisk(e)} 
+                            disabled={loading}
+                            className="bg-blue-500 hover:bg-blue-600 text-white"
+                        >
+                            {riskLoading ? 'Analyzing...' : 'Analyze Risk'}
+                        </Button>
+                    </div>
+
+                    {error && (
+                        <div className="text-red-500 mb-4">
+                            Error: {error}
+                        </div>
+                    )}
+
+                    {riskAnalysis && (
+                        <div className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg">
+                                <h3 className="font-semibold mb-2">Delayed Tasks</h3>
+                                <div className="text-2xl font-bold text-blue-600">
+                                    {riskAnalysis?.delayed_tasks}
+                                </div>
+    
+                            </div>
+                            <div className="p-4 bg-gray-50 rounded-lg">
+                                <h3 className="font-semibold mb-2">High Risk Tasks</h3>
+                                <div className="text-2xl font-bold text-blue-600">
+                                    {riskAnalysis?.high_risk_tasks}
+                                </div>
+    
+                            </div>
+
+                           
+
+                            {riskAnalysis?.recommendations && (
+                                <div>
+                                    <h3 className="font-semibold mb-2">Recommendations</h3>
+                                    <ul className="list-disc pl-5">
+                                        {riskAnalysis?.recommendations.map((suggestion, index) => (
+                                            <li key={index}>{suggestion}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
         {/* Team Members */}
         <div className="flex items-center gap-2 mb-8">
@@ -262,7 +371,7 @@ export default function ProjectPage() {
         </Card>
 
         {/* Docs & Files Card */}
-        <Card className="hover:shadow-md transition-shadow">
+        <Card onClick={handleDocsNavigate} className="hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-xl">Docs & Files</CardTitle>
           </CardHeader>

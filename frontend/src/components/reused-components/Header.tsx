@@ -242,9 +242,9 @@ export default function Header() {
           <a href="#" className="hover:underline">Lineup</a>
           <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
           <a href="#" className="hover:underline">Hey!</a>
-          <a href="#" className="hover:underline">Activity</a>
-          <a href="#" className="hover:underline">My Stuff</a>
-          <a href="#" className="hover:underline">Find</a>
+          {/* <a href="#" className="hover:underline">Activity</a> */}
+          <a onClick={() => window.location.href = '/assignments'} className="hover:underline">My Assignments</a>
+          {/* <a href="#" className="hover:underline">Find</a> */}
         </nav>
       </div>
       <NewChatDialog

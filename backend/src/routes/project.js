@@ -4,6 +4,7 @@ const projectRouter=express.Router()
 const Account = require("../models/Account");
 const authMiddleware = require('../middleware/authMiddleWare');
 const GroupChat = require('../models/GroupChat');
+const taskService = require('../services/taskService');
 
 projectRouter.post('/share-project', async (req, res) => {
     const { projectId, userId } = req.body;
@@ -118,8 +119,19 @@ projectRouter.post("/", async (req, res) => {
   }
 });
 
+projectRouter.get('/status/:projectId/tasks', async (req, res) => {
+  try {
+      const { projectId } = req.params;
+      const tasks = await taskService.getProjectTasks(projectId);
+      res.json(tasks);
+  } catch (error) {
+      console.error('Error fetching tasks:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // PUT - Add members to an existing project
-projectRouter.put("/:projectId/members", authMiddleware, async (req, res) => {
+projectRouter.put("/:projectId/members", async (req, res) => {
   const { projectId } = req.params;
   const { members } = req.body;
 
@@ -130,7 +142,7 @@ projectRouter.put("/:projectId/members", authMiddleware, async (req, res) => {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    project.members.push(...members);
+    project.members = members;
     await project.save();
 
     res.status(200).json({ message: "Members added successfully", project });

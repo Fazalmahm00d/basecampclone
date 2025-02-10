@@ -19,6 +19,11 @@ const initializeGroupChat = require('./socket');
 const initializeDirectChat = require('./singleSocket');
 const directMessageRouter = require('./routes/directchat');
 const { HfInference } = require('@huggingface/inference');
+<<<<<<< HEAD
+=======
+const fileRouter = require('./routes/files');
+const adminRouter = require('./routes/admin');
+>>>>>>> cab77f0c (removec ml)
 
 // Remove this line since we're not using it anymore
 // const initializeSocket = require('./socket');
@@ -82,6 +87,12 @@ app.use("/api/account", accountRouter);
 app.use("/api/projects", projectRouter);
 app.use("/api/todos", todoRouter);
 app.use("/api/event", eventRouter);
+<<<<<<< HEAD
+=======
+app.use("/api/files",fileRouter)
+app.use('/uploads', express.static('uploads'));
+app.use('/api/admin', adminRouter);
+>>>>>>> cab77f0c (removec ml)
 
 app.use("/api/groupchat", (req, res, next) => {
   req.io = groupChatIo;

@@ -1,6 +1,8 @@
 "use client";
+
+import React from "react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,11 +12,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import MemberSelect from "@/components/todo-components/MemberSelect";
+import { Badge } from "@/components/ui/badge";
 
 interface Task {
     name: string;
     description: string;
     isCompleted: boolean;
+    deadline: Date;
+    assignedTo: {
+        username:string;
+    }
 }
 
 interface Todo {
@@ -26,21 +38,59 @@ interface Todo {
     createdAt: string;
 }
 
-export default function TodoDetail({ params }: { params: { projectId: string; todoId: string } }) {
+interface Member {
+    _id: string;
+    username?: string;
+    email: string;
+}
+
+// interface PageProps {
+//     params: {
+//         projectId: string;
+//         todoId: string;
+//     }
+// }
+
+export default function TodoDetail() {
+    const params=useParams();
+    const {projectId,todoId}=params
     const [todo, setTodo] = useState<Todo | null>(null);
     const [newTaskName, setNewTaskName] = useState("");
     const [newTaskDescription, setNewTaskDescription] = useState("");
+    const [date, setDate] = useState<Date>();
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const user = useSelector((state: RootState) => state.user);
+    const [selectedMember, setSelectedMember] = useState<string>("");
+    const [members, setMembers] = useState<Member[]>([]);
+
+    const fetchMembers = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/projects/org/${projectId}`);
+            const project = await response.json();
+            setMembers(project.members);
+        } catch (error) {
+            console.error('Error fetching project members:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (projectId) {
+            fetchMembers();
+        }
+    }, [projectId]);
+
+    const handleMemberSelect = (memberId: string) => {
+        setSelectedMember(memberId);
+    };
 
     useEffect(() => {
         fetchTodo();
-    }, [params.todoId]);
+    }, [todoId]);
 
     const fetchTodo = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/todos/todo/${params.todoId}`);
+            const response = await axios.get(`http://localhost:5000/api/todos/todo/${todoId}`);
             setTodo(response.data);
         } catch (error) {
             console.error("Error fetching todo:", error);
@@ -51,10 +101,12 @@ export default function TodoDetail({ params }: { params: { projectId: string; to
         if (!newTaskName.trim()) return;
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/todos/${params.todoId}/task`, {
+            const response = await axios.post(`http://localhost:5000/api/todos/${todoId}/task`, {
                 name: newTaskName,
                 description: newTaskDescription,
-                isCompleted: false
+                isCompleted: false,
+                deadline: date,
+                assignedTo: selectedMember
             });
 
             setTodo(response.data);
@@ -70,7 +122,7 @@ export default function TodoDetail({ params }: { params: { projectId: string; to
         if (!todo) return;
 
         try {
-            const response = await axios.patch(`http://localhost:5000/api/todos/${params.todoId}/task/${index}`, {
+            const response = await axios.patch(`http://localhost:5000/api/todos/${todoId}/task/${index}`, {
                 isCompleted: !todo.tasks[index].isCompleted
             });
 
@@ -148,8 +200,36 @@ export default function TodoDetail({ params }: { params: { projectId: string; to
                                 placeholder="Task Description (optional)"
                                 value={newTaskDescription}
                                 onChange={(e) => setNewTaskDescription(e.target.value)}
-                                className="min-h-[100px]"
+                                className="min-h-[100px] max-h-[400px] overflow-y-auto"
                             />
+                            <MemberSelect 
+                                members={members}
+                                selectedMember={selectedMember}
+                                onSelect={handleMemberSelect}
+                            />
+
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-[280px] justify-start text-left font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
                             <Button onClick={addTask} className="w-full">
                                 Add Task
                             </Button>
@@ -170,14 +250,28 @@ export default function TodoDetail({ params }: { params: { projectId: string; to
                             className="mt-1"
                         />
                         <div className="flex-1">
-                            <h3 className={`font-medium ${task.isCompleted ? 'line-through text-gray-500' : ''}`}>
-                                {task.name}
-                            </h3>
+                            <div className="flex justify-between items-center">
+                                <h3 className={`font-medium ${task.isCompleted ? 'line-through text-gray-500' : ''}`}>
+                                    {task.name}
+                                </h3>
+                                
+                                {task.deadline && (
+                                    <p className={`mt-1 text-sm ${task.isCompleted ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        {format(new Date(task.deadline), 'PPP')}
+                                    </p>
+                                )}
+                            </div>
                             {task.description && (
                                 <p className={`mt-1 text-sm ${task.isCompleted ? 'text-gray-400' : 'text-gray-600'}`}>
                                     {task.description}
                                 </p>
                             )}
+                            <div className="flex gap-2 items-center ">
+                                Assigned To:
+                            {task.assignedTo && (
+                                    <Badge>{task.assignedTo.username}</Badge>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}

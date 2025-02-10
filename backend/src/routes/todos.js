@@ -1,7 +1,7 @@
 const express = require('express');
 const todoRouter = express.Router();
 const Todo = require('../models/Todo');
-
+const mongoose = require("mongoose");
 // Get all todos for a project
 todoRouter.get('/:projectId', async (req, res) => {
     try {
@@ -14,11 +14,60 @@ todoRouter.get('/:projectId', async (req, res) => {
     }
 });
 
+
+todoRouter.get("/tasks/:assignedTo", async (req, res) => {
+    console.log("on tasks api");
+    try {
+        const { assignedTo } = req.params;
+        console.log("assigned to" ,assignedTo)
+        if (!assignedTo || !mongoose.isValidObjectId(assignedTo)) {
+            return res.status(400).json({ message: "Invalid or missing User ID" });
+        }
+
+        if (!assignedTo || !mongoose.Types.ObjectId.isValid(assignedTo)) {
+            return res.status(400).json({ message: "Invalid or missing User ID" });
+        }
+
+        const todos = await Todo.find({ "tasks.assignedTo": assignedTo })
+            .populate("tasks.assignedTo", "username")
+            .populate("project", "name") // ✅ Ensuring project is populated correctly
+            .select("tasks title project");
+
+        let assignedTasks = [];
+        todos.forEach(todo => {
+            todo.tasks.forEach(task => {
+                if (task.assignedTo && task.assignedTo._id.toString() === assignedTo) {
+                    assignedTasks.push({
+                        _id: task._id,
+                        name: task.name,
+                        description: task.description || "",
+                        isCompleted: task.isCompleted,
+                        deadline: task.deadline,
+                        assignedTo: { _id: task.assignedTo._id, username: task.assignedTo.username },
+                        todo: {
+                            title: todo.title,
+                            project: todo.project ? { _id: todo.project._id, name: todo.project.name } : null
+                        }
+                    });
+                }
+            });
+        });
+
+        res.json(assignedTasks);
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ message: "Error fetching todos", error: error.message });
+    }
+});
+
+
+
 // Get single todo
 todoRouter.get('/todo/:todoId', async (req, res) => {
     try {
         const todo = await Todo.findById(req.params.todoId)
-            .populate('creator', 'username');
+            .populate('creator', 'username')
+            .populate('tasks.assignedTo', 'username');
         
         if (!todo) {
             return res.status(404).json({ message: 'Todo not found' });
@@ -56,17 +105,18 @@ todoRouter.post('/', async (req, res) => {
 // Add task to todo
 todoRouter.post('/:todoId/task', async (req, res) => {
     try {
-        const { name, description, isCompleted } = req.body;
+        const { name, description, isCompleted,deadline,assignedTo } = req.body;
         const todo = await Todo.findById(req.params.todoId);
         
         if (!todo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
         
-        todo.tasks.push({ name, description, isCompleted });
+        todo.tasks.push({ name, description, isCompleted,deadline,assignedTo });
         const updatedTodo = await todo.save();
         const populatedTodo = await Todo.findById(updatedTodo._id)
-            .populate('creator', 'username');
+            .populate('creator', 'username')
+            .populate('tasks.assignedTo', 'username');
             
         res.json(populatedTodo);
     } catch (error) {
