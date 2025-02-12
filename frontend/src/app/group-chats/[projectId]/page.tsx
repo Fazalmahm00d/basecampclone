@@ -219,7 +219,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="relative max-w-4xl mx-auto p-6">
+    <div className="relative max-w-4xl mx-auto p-4">
       <div className="mb-6">
                 <Button
                     onClick={() => router.back()}

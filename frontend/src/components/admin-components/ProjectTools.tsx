@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from '@/hooks/use-toast';
+import { Trash2 } from 'lucide-react';
 
 interface Project {
   _id: string;
@@ -53,6 +54,29 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
     }
   };
 
+  const handleDelete = async (projectId: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/admin/projects/${projectId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'organization-name': organizationName,
+          'userId': adminId
+        }
+      });
+  
+      if (response.ok) {
+        toast({ title: "Success", description: "Project deleted successfully" });
+        fetchProjects(); // Refresh the projects list
+      } else {
+        throw new Error('Failed to delete project');
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete project" });
+      console.error('Error deleting project:', error);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {projects.map((project) => (
@@ -70,7 +94,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className='flex items-center gap-2'>
             {editingId === project._id ? (
               <div className="space-x-2">
                 <Button onClick={() => handleRename(project._id)}>Save</Button>
@@ -84,6 +108,8 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
                 Rename
               </Button>
             )}
+            <Button onClick={() => handleDelete(project._id)} variant={'destructive'}><Trash2 />Delete</Button>
+
           </CardContent>
         </Card>
       ))}

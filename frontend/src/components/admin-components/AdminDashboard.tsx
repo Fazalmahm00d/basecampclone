@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import axios from "axios";
+import UserManagement from "./UserManagement";
 
 interface AdminDashboardProps {
   organizationName: string;
@@ -40,6 +41,7 @@ export default function AdminDashboard({ organizationName }: AdminDashboardProps
           <TabsTrigger value="groups">Groups</TabsTrigger>
           <TabsTrigger value="projects">Project Tools</TabsTrigger>
           <TabsTrigger value="merge">Merge Users</TabsTrigger>
+          <TabsTrigger value="users">Manage Users</TabsTrigger>
         </TabsList>
         
         <TabsContent value="admins">
@@ -56,6 +58,10 @@ export default function AdminDashboard({ organizationName }: AdminDashboardProps
         
         <TabsContent value="merge">
           <UserMerge organizationName={organizationName} adminId={userId} />
+        </TabsContent>
+
+        <TabsContent value="users">
+          <UserManagement organizationName={organizationName} userId={userId} />
         </TabsContent>
       </Tabs>
     </div>
