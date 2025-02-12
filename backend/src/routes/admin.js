@@ -147,4 +147,35 @@ adminRouter.post('/merge-users', async (req, res) => {
   }
 });
 
+adminRouter.delete('/projects/:projectId', async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const organizationName = req.organizationName;
+    
+    // Find the account for the organization
+    const account = await Account.findOne({ name: organizationName });
+    
+    // Find and verify the project exists
+    const project = await Project.findOne({
+      _id: projectId,
+      account: account._id
+    });
+    
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    
+    // Delete the project
+    await Project.deleteOne({ _id: projectId });
+    
+    res.json({
+      message: 'Project deleted successfully',
+      deletedProjectId: projectId
+    });
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = adminRouter;

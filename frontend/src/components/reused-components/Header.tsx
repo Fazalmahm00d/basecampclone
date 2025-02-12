@@ -269,7 +269,7 @@ export default function Header() {
 {menuOpen && (
   <motion.div 
     initial={{ opacity: 0, y: -30 }} 
-    animate={{ opacity: 1, y: 10 }} 
+    animate={{ opacity: 1, y: 10 ,x:20 }} 
     exit={{ opacity: 0, y: -10 }} 
     transition={{ duration: 0.2, ease: "easeInOut" }}
     className="absolute top-14 left-0 z-50 w-fit bg-white shadow-md md:hidden rounded-lg"
