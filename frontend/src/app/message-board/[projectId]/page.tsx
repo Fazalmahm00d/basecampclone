@@ -44,7 +44,7 @@ export default function MessageBoard() {
     };
 
     return (
-        <div className="p-6 max-w-4xl mx-auto">
+        <div className="p-4 max-w-4xl mx-auto bg-stone-200 h-screen">
             <div className="mb-6">
                 <Button
                     onClick={() => router.back()}

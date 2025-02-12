@@ -77,7 +77,7 @@ const CustomToolbar = (props: any) => {
   const { onNavigate, onView, label, view } = props;
 
   return (
-    <div className="flex justify-between items-center p-4 border-b">
+    <div className="flex flex-wrap sm:flex-nowrap justify-between items-center p-4 border-b">
       <div className="flex space-x-2">
         <button
           type="button"
@@ -380,7 +380,7 @@ const fetchEvents = async () => {
         </div>
       ) : (
         <div className="flex-1">
-          <div className="h-[60vh]">
+          <div className="h-[60vh] w-fit sm:w-full">
             <Calendar
                 view={view as any}
                 onView={handleViewChange}
@@ -393,7 +393,7 @@ const fetchEvents = async () => {
               events={events}
               startAccessor="start"
               endAccessor="end"
-              style={{ height: '100%' }}
+              style={{ height: '100%', width:'70%'}}
               selectable
               onSelectSlot={handleSelectSlot}
               onSelectEvent={(event) => setSelectedEvent(event)}

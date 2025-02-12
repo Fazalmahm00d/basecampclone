@@ -4,7 +4,7 @@ export default function RecentlyVisited() {
   return (
     <div className="flex flex-col justify-center items-center p-4">
       <h2 className="font-bold mb-4">Recently Visited</h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col sm:grid grid-cols-2 gap-4">
         <Card>
           <CardContent>
             <h3 className="font-bold">Getting Started</h3>

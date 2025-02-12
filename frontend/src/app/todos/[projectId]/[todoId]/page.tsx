@@ -145,7 +145,7 @@ export default function TodoDetail() {
     const progress = totalTasks ? (completedTasks / totalTasks) * 100 : 0;
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-6 bg-stone-200">
             <div className="mb-6">
                 <Button
                     onClick={() => router.back()}
@@ -266,12 +266,14 @@ export default function TodoDetail() {
                                     {task.description}
                                 </p>
                             )}
-                            <div className="flex gap-2 items-center ">
-                                Assigned To:
+                            
                             {task.assignedTo && (
+                                <div className="flex gap-2 items-center ">
+                                Assigned To:
                                     <Badge>{task.assignedTo.username}</Badge>
+                                    </div>
                                 )}
-                            </div>
+                            
                         </div>
                     </div>
                 ))}

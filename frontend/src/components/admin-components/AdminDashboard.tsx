@@ -35,7 +35,7 @@ export default function AdminDashboard({ organizationName }: AdminDashboardProps
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
       <Tabs defaultValue="admins">
-        <TabsList>
+        <TabsList className="flex flex-wrap mb-10 h-fit">
           <TabsTrigger value="admins">Administrators</TabsTrigger>
           <TabsTrigger value="groups">Groups</TabsTrigger>
           <TabsTrigger value="projects">Project Tools</TabsTrigger>
