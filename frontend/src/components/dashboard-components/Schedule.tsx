@@ -93,9 +93,9 @@ export default function Schedule() {
   const upcomingEvents = events.filter(event => new Date(event.end) >= new Date());
 
   return (
-    <div className="p-4 flex">
-      <div className="w-2/3 pr-4">
-        <h2 className="font-bold mb-4">Your Schedule</h2>
+    <div className="p-4 flex flex-col h-fit justify-center sm:flex-row">
+      <div className="w-full sm:w-2/3 pr-4">
+        <h2 className="font-bold mb-4 text-center sm:text-left">Your Schedule</h2>
         <CustomCalendar 
           selected={selectedDate}
           onSelect={handleDateSelect}
@@ -104,7 +104,7 @@ export default function Schedule() {
       </div>
       
       {selectedEvent && (
-        <div className="w-1/3 border p-4 rounded-lg">
+        <div className="w-full sm:w-1/3 border p-4 rounded-lg">
           <h3 className="font-bold text-lg mb-2">{selectedEvent.title}</h3>
           <p>Project: {selectedEvent.project.name}</p>
           <p>Created By: {selectedEvent.createdBy.username}</p>
@@ -112,8 +112,8 @@ export default function Schedule() {
           <p>End: {selectedEvent.end.toLocaleString()}</p>
         </div>
       )}
-      <div className="w-1/3 pl-4 ">
-        <h3 className="font-bold mb-2">Upcoming Events</h3>
+      <div className="w-full sm:w-1/3 pl-4 ">
+        <h3 className="font-bold mb-2 text-center sm:text-left">Upcoming Events</h3>
         <div className='h-80 overflow-y-auto'>
           {upcomingEvents.map(event => (
             <div 

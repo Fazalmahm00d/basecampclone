@@ -197,7 +197,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 bg-stone-200 h-screen">
           <div className="mb-6">
                     <Button
                         onClick={() => router.back()}

@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { format } from "date-fns";
 import RichTextEditor from "@/components/messageboard-components/RichTextEditor";
+import AiButton from "@/components/animata/button/ai-button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface Reply {
   content: string;
@@ -99,7 +101,7 @@ export default function MessageDetail({ params }: { params: { projectId: string;
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-4 bg-stone-200">
             <div className="mb-6">
                 <Button
                     onClick={() => router.back()}
@@ -150,13 +152,14 @@ export default function MessageDetail({ params }: { params: { projectId: string;
                     </Button>
                 </div>
             </div>
-            <Button onClick={handleSummary}>{loading ? 'Summarizing...' : 'Summarize Message'}</Button>
+            {/* <Button onClick={handleSummary}>{loading ? 'Summarizing...' : 'Summarize Message'}</Button> */}
+           <AiButton text="Generate summary" clickhandler={handleSummary} loading={loading}/>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {summary && (
-                <div>
-                <h3>Summary:</h3>
-                <p>{summary}</p>
-                </div>
+                <Card>
+                    <CardHeader>Summary:</CardHeader>
+                    <CardContent>{summary}</CardContent>
+                </Card>
             )}
             {/* Reply Form */}
             {isReplying && (

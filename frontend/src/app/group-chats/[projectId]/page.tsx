@@ -219,7 +219,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="relative max-w-4xl mx-auto p-6">
       <div className="mb-6">
                 <Button
                     onClick={() => router.back()}
@@ -230,7 +230,7 @@ useEffect(() => {
                 </Button>
             </div>
       {/* Participants List */}
-      <div className="bg-gray-100 p-4 border-b">
+      <div className="sticky top-0 bg-gray-100 w-full p-4 border-b">
         <h3 className="font-semibold mb-2">Participants</h3>
         <div className="flex flex-wrap gap-2">
           {participants.map((participant) => (

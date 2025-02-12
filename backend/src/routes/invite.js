@@ -63,13 +63,14 @@ inviteRouter.post('/invite', authMiddleware, async (req, res) => {
 
     // Find the admin's account
     const adminUser = await User.findOne({ email: adminemail });
+    console.log(adminUser,"admin user")
     if (!adminUser) {
       return res.status(404).json({ error: 'Admin user not found.' });
     }
 
     // Find the account where this admin is the admin - use _id directly
     const account = await Account.findOne({ admin: adminUser._id });
-
+    console.log(account,"<account found>")
     // Generate token with admin and account info
     const token = generateInviteToken({ 
       email,

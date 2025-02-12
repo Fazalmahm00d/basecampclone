@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import ProfileModal from "../header-components/ProfileModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-import { Bell, MessageSquare, X, Send, Check, CheckCheck } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Bell, MessageSquare, X, Send, Check, CheckCheck, Menu, ChevronDown } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -68,7 +68,7 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md ">
         <DialogHeader>
           <DialogTitle>Start a private chat with....</DialogTitle>
         </DialogHeader>
@@ -136,6 +136,9 @@ export default function Header() {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showNewChat, setShowNewChat] = useState(false);
   const [fallback, setFallback] = useState<string>("");
+  const [isTModalOpen, setIsModalOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const [authState, setAuthState] = useState({
@@ -234,19 +237,28 @@ export default function Header() {
   }, [user]);
  
   return (
-    <header className="flex justify-between items-center w-full p-4 border-b">
-        <h1 className="text-lg font-bold">BaseCamp</h1>
-      <div className="flex items-center justify-around w-full space-x-4">
-        <nav className="flex space-x-4 text-sm ">
-          <a href="#" className="hover:underline">Home</a>
-          <a href="#" className="hover:underline">Lineup</a>
-          <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
-          <a href="#" className="hover:underline">Hey!</a>
-          {/* <a href="#" className="hover:underline">Activity</a> */}
-          <a onClick={() => window.location.href = '/assignments'} className="hover:underline">My Assignments</a>
-          {/* <a href="#" className="hover:underline">Find</a> */}
-        </nav>
+    <header className=" border-b bg-white ">
+      <div className="container mx-auto  max-w-7xl flex justify-between items-center  p-4">
+      <div className="flex  items-center">
+      <button 
+        className="md:hidden p-2"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <Menu
+         className="w-6 h-6" />
+      </button>
+      <h1 className="text-lg font-bold">BaseCamp</h1>
+      
       </div>
+      <nav className="hidden md:flex space-x-4 text-sm">
+        <a href="#" className="hover:underline">Home</a>
+        <a href="#" className="hover:underline">Lineup</a>
+        <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
+        <a href="#" className="hover:underline">Hey!</a>
+        <a onClick={() => (window.location.href = '/assignments')} className="hover:underline cursor-pointer">
+          My Assignments
+        </a>
+      </nav>
       <NewChatDialog
         isOpen={showNewChat}
         onClose={() => setShowNewChat(false)}
@@ -254,35 +266,98 @@ export default function Header() {
         onMemberSelect={handleMemberSelect}
       />
 
-      
-        <div className="flex gap-6">
-          <Button
-            onClick={handleOpenModal}
-            className="px-4 py-2  rounded"
-          >
-            Edit Profile
-          </Button>
-          <ProfileModal isOpen={isModalOpen} onClose={handleCloseModal} />
-        
-        <Avatar>
-        {userImage ? (
-        <AvatarImage src={userImage} alt={`${user?.name}'s profile`} />
-      ) : (
-        <AvatarFallback>{fallback}</AvatarFallback>
-      )}
-    </Avatar>
-        
-      {authState.isAuthenticated ? (
-        <div className="flex gap-5">
-          <Button onClick={()=>{
-            window.location.href = `/dashboard`;
-          }}>Dashboard</Button>
+{menuOpen && (
+  <motion.div 
+    initial={{ opacity: 0, y: -30 }} 
+    animate={{ opacity: 1, y: 10 }} 
+    exit={{ opacity: 0, y: -10 }} 
+    transition={{ duration: 0.2, ease: "easeInOut" }}
+    className="absolute top-14 left-0 z-50 w-fit bg-white shadow-md md:hidden rounded-lg"
+  >
+    <nav className="flex flex-col space-y-2 p-4">
+      <a href="#" className="hover:underline">Home</a>
+      <a href="#" className="hover:underline">Lineup</a>
+      <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
+      <a href="#" className="hover:underline">Hey!</a>
+      <a onClick={() => (window.location.href = '/assignments')} className="hover:underline">
+        My Assignments
+      </a>
+    </nav>
+  </motion.div>
+)}
+      {authState.isAuthenticated ? 
+                <div>
+                    <Button 
+                      className="w-full justify-start" 
+                      onClick={() => (window.location.href = `/dashboard`)}
+                    >
+                      Dashboard
+                    </Button>
+                    </div>
+              : <div>
+              <Button 
+                className="w-full justify-start" 
+                onClick={() => (window.location.href = `/login`)}
+              >
+                Login
+              </Button>
+              </div>
+      }
 
-          <Button onClick={handleLogout}>Logout</Button></div>
-        ) : (
-          <Button onClick={() => window.location.href = '/login'}>Login</Button>
+
+      <div className="relative">
+        <button 
+          className="flex items-center space-x-2" 
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <Avatar>
+            {userImage ? (
+              <AvatarImage src={userImage} alt={`${user?.name}'s profile`} />
+            ) : (
+              <AvatarFallback>{fallback}</AvatarFallback>
+            )}
+          </Avatar>
+        </button>
+
+        {dropdownOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-50">
+            <ul className="flex flex-col p-2 gap-2 text-sm">
+              <li>
+                <Button 
+                  className="w-full justify-start" 
+                  onClick={() => setModalOpen(true)}
+                >
+                  Edit Profile
+                </Button>
+              </li>
+              {authState.isAuthenticated && (
+                <>
+                  <li>
+                    <Button 
+                      className="w-full justify-start bg-red-500 text-white hover:bg-red-600" 
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </li>
+                </>
+              )}
+              {!authState.isAuthenticated && (
+                <li>
+                  <Button 
+                    className="w-full justify-start" 
+                    onClick={() => (window.location.href = '/login')}
+                  >
+                    Login
+                  </Button>
+                </li>
+              )}
+            </ul>
+            <ProfileModal isOpen={isModalOpen} onClose={handleCloseModal} />
+          </div>
         )}
+      </div>
       </div>
     </header>
   );
-}
+};

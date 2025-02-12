@@ -7,13 +7,13 @@ import ProjectGrid from "@/components/dashboard-components/ProjectGrid";
 
 export default function DashBoard() {
   return (
-    <div className="container min-h-screen bg-gray-50 ">
+    <div className="md:container min-h-screen bg-stone-200 ">
       <ActionButtons />
       <Separator/>
       <div className="">
         <RecentlyVisited />
         <ProjectGrid/>
-      <div className="flex gap-2 items-start justify-center">
+      <div className="flex flex-col sm:flex-row  sm:items-start justify-center">
         <Schedule />
         <Assignments />
       </div>

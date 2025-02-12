@@ -167,7 +167,7 @@ const SingleChatInterface = () => {
   
 
   return (
-    <div className="container mx-auto p-6 shadow-xl  max-w-7xl ">
+    <div className="container mx-auto p-4 shadow-xl  max-w-7xl ">
       <div className="border-b p-6  flex items-center justify-between">
       {recipient && (
           <>
