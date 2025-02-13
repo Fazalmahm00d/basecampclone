@@ -61,7 +61,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 h-screen z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg m-10 shadow-lg p-6 w-full max-w-lg">
         <h2 className="text-lg font-bold mb-4">Edit Profile</h2>
         <form onSubmit={handleSubmit}>

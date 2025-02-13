@@ -43,6 +43,8 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
   const [members, setMembers] = useState<Member[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const user = useSelector((state: RootState) => state.user);
+  let filteredMembers: Member[] = [];
+
   useEffect(() => {
     if (!isOpen || !user) return;
 
@@ -53,10 +55,12 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
       .catch((err: Error) => console.error('Error fetching members:', err));
   }, [isOpen, user]);
 
-  const filteredMembers = members.filter((member: Member) =>
+  if(members.length>0){
+ filteredMembers = members?.filter((member: Member) =>
     member.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+}
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(e.target.value);
@@ -81,7 +85,8 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
             onChange={handleInputChange}
           />
           <div className="max-h-96 overflow-y-auto">
-            {filteredMembers.map((member: Member) => (
+            {
+             filteredMembers.length>0? filteredMembers?.map((member: Member) => (
               <div
                 key={member._id}
                 onClick={() => handleMemberClick(member)}
@@ -105,7 +110,7 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
                   <p className="text-sm text-gray-500">{member.email}</p>
                 </div>
               </div>
-            ))}
+            )):<p>No members found</p>}
           </div>
         </div>
       </DialogContent>
@@ -227,6 +232,7 @@ export default function Header() {
 
   useEffect(() => {
     if (user) {
+      console.log("user in use effecctr",user)
       if (user.profilePicture) {
         setUserImage(user.profilePicture);
       } else {
@@ -237,7 +243,7 @@ export default function Header() {
   }, [user]);
  
   return (
-    <header className=" border-b bg-white/90 fixed top-0 w-full backdrop-blur-[8px]  z-40">
+    <header className=" border-b bg-white/90 sticky top-0 h-full w-full backdrop-blur-[8px]  z-40">
       <div className="container mx-auto  max-w-7xl flex justify-between items-center  p-4">
       <div className="flex  items-center">
       <button 
@@ -247,11 +253,11 @@ export default function Header() {
         <Menu
          className="w-6 h-6" />
       </button>
-      <h1 className="text-lg font-bold">BaseCamp</h1>
+      <Button variant={'link'} className="text-lg font-bold cursor-pointer" onClick={()=>(window.location.href = '/')}>BaseCamp</Button>
       
       </div>
       <nav className="hidden md:flex space-x-4 text-sm">
-        <a href="#" className="hover:underline">Home</a>
+        <a href="/" className="hover:underline">Home</a>
         <a href="#" className="hover:underline">Lineup</a>
         <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
         <a href="#" className="hover:underline">Hey!</a>
@@ -275,7 +281,7 @@ export default function Header() {
     className="absolute top-14 left-0 z-50 w-fit bg-white shadow-md md:hidden rounded-lg"
   >
     <nav className="flex flex-col space-y-2 p-4">
-      <a href="#" className="hover:underline">Home</a>
+      <a href="/" className="hover:underline">Home</a>
       <a href="#" className="hover:underline">Lineup</a>
       <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
       <a href="#" className="hover:underline">Hey!</a>

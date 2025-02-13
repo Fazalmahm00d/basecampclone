@@ -10,8 +10,8 @@ const team = [
     image: "/assets/8422.jpg",
     social: {
       twitter: "#",
-      linkedin: "#",
-      github: "#"
+      linkedin: "https://www.linkedin.com/in/sfazalmahmood/",
+      github: "https://github.com/Fazalmahm00d"
     }
   },
   {
@@ -21,8 +21,8 @@ const team = [
     image: "/assets/3583.jpg",
     social: {
       twitter: "#",
-      linkedin: "#",
-      github: "#"
+      linkedin: "https://www.linkedin.com/in/sfazalmahmood/",
+      github: "https://github.com/Fazalmahm00d"
     }
   },
   {
@@ -32,8 +32,8 @@ const team = [
     image: "/assets/1499.jpg",
     social: {
       twitter: "#",
-      linkedin: "#",
-      github: "#"
+      linkedin: "https://www.linkedin.com/in/sfazalmahmood/",
+      github: "https://github.com/Fazalmahm00d"
     }
   }
 ];

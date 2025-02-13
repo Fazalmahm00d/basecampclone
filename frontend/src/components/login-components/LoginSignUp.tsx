@@ -50,6 +50,7 @@ export default function LoginSignupForm() {
           );
           // console.log('JWT Token:', response.data.token);
           console.log('Auth successful');
+          window.location.href = '/dashboard'
         } else {
         console.error("User information is not available.");
       }
