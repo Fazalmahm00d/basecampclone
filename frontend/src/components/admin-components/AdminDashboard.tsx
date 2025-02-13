@@ -33,7 +33,7 @@ export default function AdminDashboard({ organizationName }: AdminDashboardProps
     }
   },[user.email])
   return (
-    <div className="p-6">
+    <div className="p-4 max-w-7xl container mx-auto">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
       <Tabs defaultValue="admins">
         <TabsList className="flex flex-wrap mb-10 h-fit">

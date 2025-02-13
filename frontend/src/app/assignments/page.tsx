@@ -40,7 +40,7 @@ const user = useSelector((state: RootState) => state.user); // Assuming you have
   }, [user]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 max-w-7xl">
       <h1 className="text-2xl font-semibold mb-4">My Assignments</h1>
       {tasks.length === 0 ? (
         <p className="text-gray-500">No tasks assigned to you.</p>
