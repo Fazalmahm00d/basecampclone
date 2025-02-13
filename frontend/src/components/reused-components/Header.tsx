@@ -237,7 +237,7 @@ export default function Header() {
   }, [user]);
  
   return (
-    <header className=" border-b bg-white ">
+    <header className=" border-b bg-white/90 fixed top-0 w-full backdrop-blur-[8px]  z-40">
       <div className="container mx-auto  max-w-7xl flex justify-between items-center  p-4">
       <div className="flex  items-center">
       <button 

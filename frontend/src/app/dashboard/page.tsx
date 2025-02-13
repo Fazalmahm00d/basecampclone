@@ -7,8 +7,10 @@ import ProjectGrid from "@/components/dashboard-components/ProjectGrid";
 
 export default function DashBoard() {
   return (
-    <div className="md:container min-h-screen bg-stone-200 ">
-      <ActionButtons />
+    
+    <div className="min-h-screen  bg-stone-200 ">
+      <div>
+      <ActionButtons/>
       <Separator/>
       <div className="">
         <RecentlyVisited />
@@ -18,7 +20,7 @@ export default function DashBoard() {
         <Assignments />
       </div>
       </div>
-
+      </div>
     </div>
   );
 }
