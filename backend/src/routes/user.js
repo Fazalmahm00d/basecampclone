@@ -15,12 +15,24 @@ userRoutes.put('/profile', async (req, res) => {
   
      const user=await User.findOne({ email })
      if(user.role==='admin'){
-        const orgExists=Account.findOne({ name :organizationName})
+
+        const orgExists=await Account.findOne({ name :organizationName})
+
         if(orgExists){
           return res.status(404).json({ error: "Org name already exists"})
-        }
-     
-  
+        }else{
+        const account = new Account({
+          name:organizationName,
+          admin: user._id,
+          members: [user._id], // Admin is automatically a member
+        });
+    
+        await account.save();
+    
+        // Add the account to the admin's accounts list
+        user.accounts.push(account._id);
+        await user.save();
+      }
       // Find user by email and update
       const updatedUser = await User.findOneAndUpdate(
         { email }, // Find user by email

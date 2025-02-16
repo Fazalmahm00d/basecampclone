@@ -322,12 +322,20 @@ export default function Header() {
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           <Avatar>
-            {userImage ? (
-              <AvatarImage src={userImage} alt={`${user?.name}'s profile`} />
-            ) : (
-              <AvatarFallback>{fallback}</AvatarFallback>
-            )}
-          </Avatar>
+          {userImage ? (
+            <AvatarImage 
+            src={userImage} 
+            alt={`${user?.name}'s profile`}
+            referrerPolicy="no-referrer" // Important for Google images
+            onError={() => {
+              setUserImage(null);
+              setFallback(getInitials(user?.name || ""));
+            }}
+          />
+          ) : (
+            <AvatarFallback>{fallback}</AvatarFallback>
+          )}
+        </Avatar>
         </button>
 
         {dropdownOpen && (
