@@ -1,10 +1,10 @@
 "use client"
 // components/admin/ProjectTools.tsx
 import React, { useState, useEffect } from 'react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
 
 interface Project {
@@ -27,7 +27,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
       const data = await response.json();
       setProjects(data);
     } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch projects" });
+      toast.error( "Error", { description: "Failed to fetch projects" });
     }
   };
 
@@ -44,13 +44,13 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Project renamed successfully" });
+        toast.success( "Success", {description: "Project renamed successfully" });
         setEditingId(null);
         setNewName('');
         fetchProjects();
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to rename project" });
+      toast.error( "Error", {description: "Failed to rename project" });
     }
   };
 
@@ -66,20 +66,20 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
       });
   
       if (response.ok) {
-        toast({ title: "Success", description: "Project deleted successfully" });
+        toast.success( "Success", {description: "Project deleted successfully" });
         fetchProjects(); // Refresh the projects list
       } else {
         throw new Error('Failed to delete project');
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to delete project" });
+      toast.error( "Error", {description: "Failed to delete project" });
       console.error('Error deleting project:', error);
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {projects.map((project) => (
+      {projects.length>0 ? projects.map((project) => (
         <Card key={project._id}>
           <CardHeader>
             <CardTitle>
@@ -112,7 +112,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
 
           </CardContent>
         </Card>
-      ))}
+      )):<p>No project found</p>}
     </div>
   );
 }

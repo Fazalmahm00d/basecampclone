@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from '@/hooks/use-toast';
 import MultiSelect from '../reused-components/MultiSelect';
+import { toast } from 'sonner';
 
 interface Group {
   _id: string;
@@ -34,7 +34,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
       const data = await response.json();
       setGroups(data);
     } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch groups" });
+      toast.error( "Error",{ description: "Failed to fetch groups" });
     }
   };
 
@@ -47,7 +47,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
         label: user.email
       })));
     } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch members" });
+      toast.error( "Error", { description: "Failed to fetch members" });
     }
   };
 
@@ -67,13 +67,13 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Group created successfully" });
+        toast.success( "Success", {description: "Group created successfully" });
         setNewGroupName('');
         setSelectedMembers([]);
         fetchGroups();
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to create group" });
+      toast.error( "Error", {description: "Failed to create group" });
     }
   };
 
@@ -100,7 +100,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {groups.map((group) => (
+        {groups.length> 0 ? groups?.map((group) => (
           <Card key={group._id}>
             <CardHeader>
               <CardTitle>{group.name}</CardTitle>
@@ -109,7 +109,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
               <p>Members: {group.members.length}</p>
             </CardContent>
           </Card>
-        ))}
+        )) :<p>No project found</p>}
       </div>
     </div>
   );

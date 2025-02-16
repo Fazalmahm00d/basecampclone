@@ -6,6 +6,7 @@ import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AlertCircle, Clock } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 
 interface Task {
@@ -33,6 +34,7 @@ export default function Assignments() {
         const response = await axios.get(`http://localhost:5000/api/todos/tasks/${userId}`);
         setTasks(response.data);
       } catch (error) {
+        toast({title:"Error fetching tasks"})
         console.error("Error fetching tasks", error);
       }
     };

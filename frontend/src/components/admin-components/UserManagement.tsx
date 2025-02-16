@@ -146,7 +146,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
 
   return (
     <div className="space-y-4">
-      {users.map((user) => (
+      {users.length>0 ? users?.map((user) => (
         <div key={user._id} className="flex items-center justify-between p-4 border rounded-lg shadow-sm">
           <div className="flex-1">
             <h3 className="font-medium">{user.username}</h3>
@@ -182,7 +182,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
             </Button>
           </div>
         </div>
-      ))}
+      )): <p>No users found ,set Organization in profile</p>}
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

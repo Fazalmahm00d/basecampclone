@@ -1,16 +1,9 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { Calendar } from '@/components/ui/calendar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import axios from 'axios';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription 
-} from '@/components/ui/dialog';
+import { Skeleton } from "@/components/ui/skeleton";
 import CustomCalendar from '../ui/CustomCalendar';
 import { toast } from 'sonner';
 
@@ -27,9 +20,9 @@ interface Event {
 export default function Schedule() {
   const [events, setEvents] = useState<Event[]>([]);
   const user = useSelector((state: RootState) => state.user);
-  const account = useSelector((state: RootState) => state.account);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchEvents = async () => {
@@ -42,7 +35,7 @@ export default function Schedule() {
           start: new Date(event.start),
           end: new Date(event.end)
         })));
-        console.log(events,"events")
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch events:', error);
       }
@@ -57,7 +50,6 @@ export default function Schedule() {
     if (!date) return;
 
     setSelectedDate(date);
-    console.log(events,"events on click")
     const eventsOnDate = events.filter(event => {
       const selectedDateString = date.toDateString();
       const eventStartString = event.start.toDateString();
@@ -65,7 +57,7 @@ export default function Schedule() {
     
       return selectedDateString >= eventStartString && selectedDateString <= eventEndString;
     });
-    console.log(eventsOnDate,"events on date")
+    
     if (eventsOnDate.length > 0) {
       eventsOnDate.forEach(event => {
         toast(`📅 Event: ${event.title}`, {
@@ -92,6 +84,27 @@ export default function Schedule() {
 
   const upcomingEvents = events.filter(event => new Date(event.end) >= new Date());
 
+  if (loading) {
+    return (
+      <div className="p-4 flex flex-col h-fit justify-center sm:flex-row animate-in">
+        <div className="w-full sm:w-2/3 pr-4">
+          <h2 className="font-bold mb-4 text-center sm:text-left">Your Schedule</h2>
+          <Skeleton className="h-[350px] w-full rounded-lg" />
+        </div>
+        
+        <div className="w-full sm:w-1/3 pl-4">
+          <h3 className="font-bold mb-2 text-center sm:text-left">Upcoming Events</h3>
+          <div className="h-80 space-y-3">
+            <Skeleton className="h-16 w-full rounded-lg" />
+            <Skeleton className="h-16 w-full rounded-lg" />
+            <Skeleton className="h-16 w-full rounded-lg" />
+            <Skeleton className="h-16 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 flex flex-col h-fit justify-center sm:flex-row">
       <div className="w-full sm:w-2/3 pr-4">
@@ -115,7 +128,7 @@ export default function Schedule() {
       <div className="w-full sm:w-1/3 pl-4 ">
         <h3 className="font-bold mb-2 text-center sm:text-left">Upcoming Events</h3>
         <div className='h-80 overflow-y-auto'>
-          {upcomingEvents.map(event => (
+          {upcomingEvents.length>0 ? upcomingEvents?.map(event => (
             <div 
               key={event._id} 
               className="border-b py-2 cursor-pointer hover:bg-gray-100"
@@ -126,7 +139,7 @@ export default function Schedule() {
                 {event.start.toLocaleDateString()} - {event.end.toLocaleDateString()}
               </p>
             </div>
-          ))}
+          )): <p>No event found</p>}
         </div>
       </div>
     </div>

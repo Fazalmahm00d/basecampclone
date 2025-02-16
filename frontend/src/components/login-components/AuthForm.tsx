@@ -4,8 +4,8 @@ import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { toast } from 'sonner';
 
-// Define types for the form data
 type AuthFormData = {
   email: string;
   password: string;
@@ -50,12 +50,18 @@ const AuthForm: React.FC = () => {
 
       if (response.data.success) {
         // Redirect or update global auth state
-        console.log('Auth successful:', response.data);
+        // console.log('Auth successful:', response.data);
+        toast.success("Authentication success")
         window.location.href = '/dashboard'; // Redirect to dashboard
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data.error || 'An error occurred');
+        toast(
+          "Signup error",{
+            description: "Invalid credentials",
+          }
+           )
       } else {
         setError('An unexpected error occurred');
       }

@@ -1,8 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const userRoutes=express.Router()
-
-
+const Account=require('../models/Account')
 userRoutes.put('/profile', async (req, res) => {
     console.log("inside func")
     const { email } = req.query; // Extract email from query parameters
@@ -14,6 +13,12 @@ userRoutes.put('/profile', async (req, res) => {
         return res.status(400).json({ error: 'Email is required' });
       }
   
+     const user=await User.findOne({ email })
+     if(user.role==='admin'){
+        const orgExists=Account.findOne({ name :organizationName})
+        if(orgExists){
+          return res.status(404).json({ error: "Org name already exists"})
+        }
      
   
       // Find user by email and update
@@ -32,6 +37,9 @@ userRoutes.put('/profile', async (req, res) => {
       }
   
       res.json(updatedUser);
+    } else{
+      return res.status(404).json({ error: 'You are not authorized' });
+    }
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Server error' });

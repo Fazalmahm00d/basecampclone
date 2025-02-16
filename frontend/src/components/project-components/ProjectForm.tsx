@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { title } from "process";
+import { toast } from "@/hooks/use-toast";
 
 interface Member {
   _id: string;
@@ -35,6 +37,10 @@ export default function ProjectForm() {
         setAvailableMembers(response.data);
       } catch (error) {
         console.error("Error fetching members:", error);
+        toast({
+          title:"Error fetching members",
+          variant:"destructive"
+        })
         setError("Failed to fetch members");
       }
     }
@@ -58,7 +64,10 @@ export default function ProjectForm() {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } 
         }
       );
-      alert("Project created successfully!");
+      // alert("Project created successfully!");
+      toast({
+        title:"Project created successfully!"
+      })
       setName("");
       setSelectedMembers([]);
       setSearchTerm("");
