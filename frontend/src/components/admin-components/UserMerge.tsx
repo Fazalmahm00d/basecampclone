@@ -65,7 +65,7 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
   };
 
   return (
-    <Card>
+    <div> { users.length>0 ? <Card>
       <CardHeader>
         <CardTitle>Merge Users</CardTitle>
       </CardHeader>
@@ -122,5 +122,8 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
         </div>
       </CardContent>
     </Card>
+  :<p>No users found .set organization in the profile</p>  
+  }
+  </div>
   );
 }

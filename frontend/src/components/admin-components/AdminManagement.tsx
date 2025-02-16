@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface User {
   _id: string;
@@ -27,7 +27,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
       const data = await response.json();
       setUsers(data);
     } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch users" });
+      toast( "Error", {description: "Failed to fetch users" });
     }
   };
 
@@ -45,11 +45,11 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: `Administrator ${action}d successfully` });
+        toast.success(  "Success",{ description: `Administrator ${action}d successfully` });
         fetchUsers();
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to update administrator status" });
+      toast.success("Error", {description: "Failed to update administrator status" });
     }
   };
 
@@ -65,7 +65,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user) => (
+          {users.length>0 ? users.map((user) => (
             <TableRow key={user._id}>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
@@ -78,7 +78,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
                 </Button>
               </TableCell>
             </TableRow>
-          ))}
+          )) :<p>No user found.set Organization in the profile</p>}
         </TableBody>
       </Table>
     </div>

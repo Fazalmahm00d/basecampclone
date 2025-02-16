@@ -49,7 +49,6 @@ export default function ProjectGrid() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-        console.log(user.organizationName,"user org")
       try {
         const response = await axios.get<Project[]>(
           `http://localhost:5000/api/projects/${user.organizationName}`,
@@ -102,8 +101,7 @@ export default function ProjectGrid() {
         <p>Create a new project to get started</p>
       </div>
     );
-  }
-
+  }else{
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {projects.map((project) => (
@@ -144,4 +142,5 @@ export default function ProjectGrid() {
       ))}
     </div>
   );
+}
 }

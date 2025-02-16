@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
 import axios from "axios";
 import ProjectForm from "../project-components/ProjectForm";
+import { toast } from "@/hooks/use-toast";
 
 export default function ActionButtons() {
   const user = useSelector((state: RootState) => state.user);
@@ -42,7 +43,10 @@ export default function ActionButtons() {
       );
 
       console.log(response, "response from invite");
-      alert("Invitation sent successfully!");
+      // alert("Invitation sent successfully!");
+      toast({
+        title:"Invitation sent successfully"
+      })
     } catch (err) {
       console.error(err);
       setError("Failed to send the invitation. Please try again.");

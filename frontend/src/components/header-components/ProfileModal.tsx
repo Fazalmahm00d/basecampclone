@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { RootState } from "@/redux/store";
 import { setUser } from "@/redux/slices/userSlices";
+import { toast } from "@/hooks/use-toast";
+// import { toast } from "sonner";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -52,9 +54,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
 
       // Dispatch updated user data to Redux store
       dispatch(setUser(response.data));
+      toast({
+        title:"Profile updated successfully"
+      })
       onClose(); // Close the modal after successful update
     } catch (error) {
       console.error("Error updating profile:", error);
+      toast({
+        title:"error updating profile",
+        variant:"destructive"
+      })
     }
   };
 

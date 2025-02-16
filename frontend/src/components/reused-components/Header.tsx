@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileModal from "../header-components/ProfileModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { motion } from "framer-motion";
-import { Bell, MessageSquare, X, Send, Check, CheckCheck, Menu, ChevronDown } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { 
   Dialog, 
   DialogContent, 
@@ -16,6 +16,7 @@ import {
   DialogTitle 
 } from '@/components/ui/dialog';
 import { setAccount } from "@/redux/slices/accountSlices";
+import { useToast } from "@/hooks/use-toast";
 
 // Types
 interface Member {
@@ -86,7 +87,7 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
           />
           <div className="max-h-96 overflow-y-auto">
             {
-             filteredMembers.length>0? filteredMembers?.map((member: Member) => (
+             filteredMembers.length>0 ? filteredMembers?.map((member: Member) => (
               <div
                 key={member._id}
                 onClick={() => handleMemberClick(member)}
@@ -136,6 +137,8 @@ const getAccountId = async (organizationName: string): Promise<string> => {
 export default function Header() {
   const user = useSelector((state: RootState) => state.user);  // Access Redux state
   const dispatch = useDispatch();
+  const { toast } = useToast()
+
   const [accountId, setAccountId] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState<string | null>(null);
@@ -232,7 +235,6 @@ export default function Header() {
 
   useEffect(() => {
     if (user) {
-      console.log("user in use effecctr",user)
       if (user.profilePicture) {
         setUserImage(user.profilePicture);
       } else {
@@ -271,6 +273,9 @@ export default function Header() {
         accountId={accountId!}
         onMemberSelect={handleMemberSelect}
       />
+
+    
+
 
 {menuOpen && (
   <motion.div 

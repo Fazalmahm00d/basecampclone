@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 interface PasswordDialogProps {
   isOpen: boolean;
@@ -36,7 +37,9 @@ const PasswordDialog: React.FC<PasswordDialogProps> = ({
       );
 
       console.log("Invitation accepted:", response.data);
-
+      toast({
+        title:"Invitation accepted"
+      })
       // Close the dialog and redirect the user
       onClose();
       window.location.href = "/dashboard"; // Redirect to dashboard or home page

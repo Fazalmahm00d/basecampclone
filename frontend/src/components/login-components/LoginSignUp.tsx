@@ -1,8 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios"
 import {
@@ -13,10 +11,10 @@ import {
 } from "firebase/auth";
 import { auth, provider } from "@/lib/firebaseconfig";
 import AuthForm from "./AuthForm";
+import { toast } from "sonner";
 
 
 export default function LoginSignupForm() {
-  
   const handleLoginClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     handleGoogleAuth(event, auth, provider);
   };
@@ -37,7 +35,7 @@ export default function LoginSignupForm() {
 
       if (user) {
         console.log(user, "users info");
-        console.log(user.photoURL, "user photo url");
+        // console.log(user.photoURL, "user photo url");
           // Access token from `user` object
           const token = await user.getIdToken();
       
@@ -49,13 +47,15 @@ export default function LoginSignupForm() {
             }
           );
           // console.log('JWT Token:', response.data.token);
-          console.log('Auth successful');
+          // console.log('Auth successful');
+          toast.success("Authentication success")
           window.location.href = '/dashboard'
         } else {
         console.error("User information is not available.");
       }
       } catch (error) {
-        console.error("Login error:", error);
+        console.log(error)
+        toast.error("Login error")
       }
   }
 
@@ -84,9 +84,7 @@ export default function LoginSignupForm() {
           </CardTitle>
         </CardHeader>
 
-        {/* Content Section */}
         <CardContent>
-          {/* Google Login Button */}
           <Button
             onClick={handleLoginClick}
             variant="default"

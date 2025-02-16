@@ -40,6 +40,10 @@ export const ProjectMemberDialog: React.FC<ProjectMemberDialogProps> = ({
         const members = await response.json();
         setAccountMembers(members);
       } catch (error) {
+        toast({
+          title:"Failed to fetch account members",
+          variant:"destructive"
+        })
         console.error('Failed to fetch account members:', error);
       }
     };
