@@ -52,7 +52,7 @@ const verifyInviteToken = (token) => {
 // Send invite route
 inviteRouter.post('/invite', authMiddleware, async (req, res) => {
   try {
-    const { adminemail,email, role = 'member',organizationName } = req.body;
+    const { username,adminemail,email, role = 'member',organizationName } = req.body;
 
     console.log(req.user,"user sending invite")
     const receiverId = req.user._id;
@@ -73,6 +73,7 @@ inviteRouter.post('/invite', authMiddleware, async (req, res) => {
     console.log(account,"<account found>")
     // Generate token with admin and account info
     const token = generateInviteToken({ 
+      username,
       email,
       role,
       organizationName,
@@ -91,6 +92,7 @@ inviteRouter.post('/invite', authMiddleware, async (req, res) => {
       to: email,
       subject: `You've been invited to join ${organizationName}!`,
       html: `
+        <h2>Hi ${username}</h2>
         <h2>Welcome to ${organizationName}!</h2>
         <p>You've been invited as a <strong>${role}</strong>.</p>
         <p>Click the link below to accept the invitation:</p>
@@ -126,6 +128,7 @@ inviteRouter.get('/verify-invite', async (req, res) => {
     }
 
     res.status(200).json({
+      username:decoded.username,
       email: decoded.email,
       role: decoded.role,
       accountId: decoded.accountId,
@@ -170,6 +173,7 @@ inviteRouter.post('/accept-invite', async (req, res) => {
 
     // Create new user
     user = new User({
+      username:decoded.username,
       email: decoded.email,
       password,
       role: decoded.role,
@@ -190,6 +194,7 @@ inviteRouter.post('/accept-invite', async (req, res) => {
     // Generate auth token
     const authToken = jwt.sign(
       { 
+        username:user.username,
         userId: user._id,
         email: user.email,
         role: user.role,
@@ -207,6 +212,7 @@ inviteRouter.post('/accept-invite', async (req, res) => {
       message: 'Registration successful',
       token: authToken,
       user: {
+        username:user.username,
         id: user._id,
         email: user.email,
         role: user.role,

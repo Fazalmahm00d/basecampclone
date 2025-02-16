@@ -34,7 +34,7 @@ export default function ActionButtons() {
 
       const response = await axios.post(
         'http://localhost:5000/api/invite',
-        { adminemail:user.email,email, role, organizationName:orgName},
+        { username:name,adminemail:user.email,email, role, organizationName:orgName},
         {
           headers: {
             Authorization: `Bearer ${token}`,
