@@ -8,8 +8,8 @@ import ProjectGrid from "@/components/dashboard-components/ProjectGrid";
 export default function DashBoard() {
   return (
     
-    <div className="min-h-screen  bg-stone-200 ">
-      <div>
+    <div className="min-h-screen  bg-stone-200 flex justify-center">
+      <div className="container max-w-7xl">
       <ActionButtons/>
       <Separator/>
       <div className="">

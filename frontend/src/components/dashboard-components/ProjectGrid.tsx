@@ -50,6 +50,7 @@ export default function ProjectGrid() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        if(user.organizationName){
         const response = await axios.get<Project[]>(
           `http://localhost:5000/api/projects/${user.organizationName}`,
           {
@@ -57,6 +58,7 @@ export default function ProjectGrid() {
           }
         );
         setProjects(response.data);
+      }
       } catch (error) {
         console.error('Error fetching projects:', error);
         toast({
