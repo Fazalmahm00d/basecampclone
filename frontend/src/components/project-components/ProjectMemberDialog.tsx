@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from '@/hooks/use-toast';
 
 interface User {
   _id: string;
@@ -62,8 +63,16 @@ export const ProjectMemberDialog: React.FC<ProjectMemberDialogProps> = ({
   };
 
   const handleSave = async () => {
+    if(selectedMembers.length===0 ){
+      setOpen(false);
+      toast({
+        title:"Atleast one member must be selected",
+        variant:"destructive"
+      })
+    }else{
     await onMemberUpdate(selectedMembers);
     setOpen(false);
+    }
   };
 
   return (

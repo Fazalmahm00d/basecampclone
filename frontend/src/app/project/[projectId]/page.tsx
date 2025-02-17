@@ -20,6 +20,7 @@ import ProjectMemberDialog from '@/components/project-components/ProjectMemberDi
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import AiButton from '@/components/animata/button/ai-button';
+import MemberSelect from '@/components/todo-components/MemberSelect';
 
 interface Member {
   _id: string;
@@ -179,7 +180,7 @@ export default function ProjectPage() {
       fetchProject();
       fetchTasks();
     }
-  }, [params.projectId, toast]);
+  }, [params.projectId,toast,project]);
 
   if (loading) {
     return (
@@ -246,16 +247,19 @@ export default function ProjectPage() {
         onMemberUpdate={handleMemberUpdate} 
       />
       <div className="flex flex-wrap gap-1">
-        {project.members.map((member) => (
-          <div key={member._id} className="relative group" title={member.username}>
+        {project?.members?.map((member) => (
+          <div key={member?._id} className="relative group" title={member?.username}>
+
+            {member?.username &&
             <Avatar className="h-8 w-8 border-2 border-white">
               <AvatarFallback 
-                style={{ backgroundColor: getRandomPastelColor(member.username) }} 
+                style={{ backgroundColor: getRandomPastelColor(member?.username) }} 
                 className="text-gray-700"
               >
-                {getInitials(member.username)}
+                {getInitials(member?.username)}
               </AvatarFallback>
             </Avatar>
+            }
           </div>
         ))}
       </div>
