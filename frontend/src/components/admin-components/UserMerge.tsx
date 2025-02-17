@@ -13,25 +13,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from '@/hooks/use-toast';
+import { useUsers } from '@/hooks';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function UserMerge({ organizationName, adminId}: { organizationName: string ,adminId:string}) {
   const [primaryUserId, setPrimaryUserId] = useState('');
   const [secondaryUserId, setSecondaryUserId] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+  const queryClient=useQueryClient();
+  // const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to fetch users" });
-    }
-  };
+  // const fetchUsers = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+  //     const data = await response.json();
+  //     setUsers(data);
+  //   } catch (error) {
+  //     toast({ title: "Error", description: "Failed to fetch users" });
+  //   }
+  // };
+  const { data: users, isLoading } = useUsers(organizationName);
 
   const handleMerge = async () => {
     if (!primaryUserId || !secondaryUserId) {
@@ -57,7 +61,8 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
         toast({ title: "Success", description: "Users merged successfully" });
         setPrimaryUserId('');
         setSecondaryUserId('');
-        fetchUsers();
+        // fetchUsers();
+        queryClient.invalidateQueries(['users'])
       }
     } catch (error) {
       toast({ title: "Error", description: "Failed to merge users" });
@@ -85,7 +90,7 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
                 <SelectValue placeholder="Select primary user" />
               </SelectTrigger>
               <SelectContent>
-                {users.map((user) => (
+                {users.map((user:User) => (
                   <SelectItem key={user._id} value={user._id}>
                     {user.email}
                   </SelectItem>
@@ -102,8 +107,8 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
               </SelectTrigger>
               <SelectContent>
                 {users
-                  .filter((user) => user._id !== primaryUserId)
-                  .map((user) => (
+                  .filter((user:User) => user._id !== primaryUserId)
+                  .map((user:User) => (
                     <SelectItem key={user._id} value={user._id}>
                       {user.email}
                     </SelectItem>

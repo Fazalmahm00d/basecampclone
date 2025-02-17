@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast }  from "@/components/ui/toaster";
 import {  Inter, JetBrains_Mono } from "next/font/google";
 import OrganizationSetupModal from "@/components/reused-components/OrgSetupModal";
+import QueryProvider from "./QueryProvider";
 
 
 const inter = Inter({
@@ -40,7 +41,7 @@ export default function RootLayout({
         <Provider store={store}>
         <Header />
         <OrganizationSetupModal />
-        {children}
+        <QueryProvider>{children}</QueryProvider>
         <Toaster/>
         <Toast/>
         </Provider> 

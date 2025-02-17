@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
+import { useUsers } from '@/hooks';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface User {
   _id: string;
@@ -15,21 +17,22 @@ interface User {
 
 
 export default function AdminManagement({ organizationName, adminId}: { organizationName: string ,adminId:string}) {
-  const [users, setUsers] = useState<User[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
+  const queryClient=useQueryClient()
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      toast( "Error", {description: "Failed to fetch users" });
-    }
-  };
+  // const fetchUsers = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+  //     const data = await response.json();
+  //     setUsers(data);
+  //   } catch (error) {
+  //     toast( "Error", {description: "Failed to fetch users" });
+  //   }
+  // };
+  const { data: users, isLoading } = useUsers(organizationName);
 
   const toggleAdmin = async (userId: string, currentRole: string) => {
     try {
@@ -46,7 +49,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
 
       if (response.ok) {
         toast.success(  "Success",{ description: `Administrator ${action}d successfully` });
-        fetchUsers();
+        queryClient.invalidateQueries(['users'])
       }
     } catch (error) {
       toast.success("Error", {description: "Failed to update administrator status" });
@@ -65,7 +68,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.length>0 ? users.map((user) => (
+          {users ? users.map((user:User) => (
             <TableRow key={user._id}>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>

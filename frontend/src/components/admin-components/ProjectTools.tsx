@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 interface Project {
   _id: string;
@@ -13,23 +14,29 @@ interface Project {
 }
 
 export default function ProjectTools({ organizationName, adminId}: { organizationName: string ,adminId:string}) {
-  const [projects, setProjects] = useState<Project[]>([]);
+  // const [projects, setProjects] = useState<Project[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
 
   const fetchProjects = async () => {
     try {
       const response = await fetch(`http://localhost:5000/api/projects/${organizationName}`);
       const data = await response.json();
-      setProjects(data);
+      // setProjects(data);
+      return data
     } catch (error) {
       toast.error( "Error", { description: "Failed to fetch projects" });
     }
   };
+  const { data: projects, isLoading, error } = useQuery({
+    queryKey: ['projects'],
+    queryFn: fetchProjects
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  
 
   const handleRename = async (projectId: string) => {
     try {
@@ -79,7 +86,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {projects.length>0 ? projects.map((project) => (
+      {projects.length>0 ? projects.map((project:Project) => (
         <Card key={project._id}>
           <CardHeader>
             <CardTitle>
