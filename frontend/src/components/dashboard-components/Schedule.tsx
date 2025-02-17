@@ -28,7 +28,7 @@ export default function Schedule() {
     const fetchEvents = async () => {
       try {
         if (!user) return;
-
+        if(user.organizationName){
         const response = await axios.get<Event[]>(`http://localhost:5000/api/event/accounts/${user.organizationName}/events`);
         setEvents(response.data.map(event => ({
           ...event,
@@ -36,6 +36,7 @@ export default function Schedule() {
           end: new Date(event.end)
         })));
         setLoading(false);
+      }
       } catch (error) {
         console.error('Failed to fetch events:', error);
       }
