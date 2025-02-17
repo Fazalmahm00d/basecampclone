@@ -61,7 +61,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast({
-        title:"error updating profile",
+        title:"Error updating profile",
         variant:"destructive"
       })
     }

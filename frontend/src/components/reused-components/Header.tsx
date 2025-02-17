@@ -169,7 +169,7 @@ export default function Header() {
       
       console.log("logged out")
       dispatch(logout())
-      // window.location.href = '/login';
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout failed:', error);
       // Handle error (show message to user)
