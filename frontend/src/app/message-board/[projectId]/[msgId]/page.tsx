@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import RichTextEditor from "@/components/messageboard-components/RichTextEditor";
 import AiButton from "@/components/animata/button/ai-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { toast } from "sonner";
 
 interface Reply {
   content: string;
@@ -27,7 +28,7 @@ interface Message {
   createdAt: string;
 }
 
-export default function MessageDetail({ params }: { params: { projectId: string; msgId: string } }) {
+export default function MessageDetail() {
     const [message, setMessage] = useState<Message | null>(null);
     const [summary, setSummary] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -36,10 +37,12 @@ export default function MessageDetail({ params }: { params: { projectId: string;
     const [isReplying, setIsReplying] = useState(false);
     const router = useRouter();
     const user = useSelector((state: RootState) => state.user);
-
+    const params=useParams();
     useEffect(() => {
-        fetchMessage();
-    }, [params.msgId]);
+        if(params.msgId){
+            fetchMessage();
+        }
+    }, [params]);
     const handleSummary = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -87,6 +90,7 @@ export default function MessageDetail({ params }: { params: { projectId: string;
             
             setReplyContent("");
             setIsReplying(false);
+            toast.info("Replied successfully")
         } catch (error) {
             console.error("Error adding reply:", error);
         }
@@ -166,6 +170,7 @@ export default function MessageDetail({ params }: { params: { projectId: string;
                 <div className="mb-8 bg-gray-50 p-6 rounded-lg">
                     <h3 className="text-lg font-semibold mb-4">Write a Reply</h3>
                     <RichTextEditor
+                        hidden={true}
                         value={replyContent}
                         onChange={setReplyContent}
                         onSubjectChange={() => {}}

@@ -12,6 +12,7 @@ import { useParams, useRouter } from 'next/navigation';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Button } from '@/components/ui/button';
 import { DialogTrigger } from '@radix-ui/react-dialog';
+import { toast } from '@/hooks/use-toast';
 
 const localizer = momentLocalizer(moment);
 // Custom calendar styles
@@ -298,9 +299,14 @@ const fetchEvents = async () => {
       if (response.ok) {
         await fetchEvents();
         setIsAddEventOpen(false);
+        toast({title:"Event added successfully"})
       }
     } catch (error) {
       console.error('Error adding event:', error);
+      toast({
+        title:"Event added successfully",
+        variant:"destructive"
+      })
     }
   };
 

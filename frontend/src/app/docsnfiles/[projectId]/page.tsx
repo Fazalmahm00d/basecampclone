@@ -54,7 +54,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [viewFile,setViewFile]=useState<File | null>(null);
-    const router=useRouter()
+    const router=useRouter();
+    const [open,setOpen]=useState(false)
 
   const params=useParams()
   const projectId=params.projectId
@@ -77,6 +78,10 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       fetchContents();
       setFileName('');
       setFileContent('');
+      setOpen(false)
+      toast({
+        title:"Document has been created"
+      })
     } catch (error) {
       console.error('Error creating document:', error);
     }
@@ -96,6 +101,11 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       });
       fetchContents();
       setFolderName('');
+      setOpen(false)
+      toast({
+        title: "Success",
+        description: "Folder has been created"
+      });
     } catch (error) {
       console.error('Error creating folder:', error);
     }
@@ -141,8 +151,19 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       await axios.post(`http://localhost:5000/api/files/${projectId}/${userId}/upload`, formData);
       fetchContents();
       setSelectedFile(null);
+      setOpen(false)
+      toast({
+        title: "Success",
+        description: "File has been uploaded"
+      });
     } catch (error) {
       console.error('Error uploading file:', error);
+      setOpen(false)
+      toast({
+        title: "Error",
+        description: "Error uploading file",
+        variant:"destructive"
+      });
     }
   };
 
@@ -211,7 +232,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Files & Documents</h2>
         
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>New</Button>
           </DialogTrigger>

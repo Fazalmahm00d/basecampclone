@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import RichTextEditor from "@/components/messageboard-components/RichTextEditor";
+import { toast } from "sonner";
 
 
 interface Message {
@@ -41,6 +42,7 @@ export default function MessageBoard() {
         setMessages([response.data, ...messages]); // Add new message at the top
         setNewMessage("");
         setOpen(false);  // Close modal after submission
+        toast.info("new message created")
     };
 
     return (

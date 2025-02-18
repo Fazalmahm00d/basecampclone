@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X, Download, ExternalLink, Eye } from "lucide-react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface File {
   _id: string;
@@ -33,7 +34,8 @@ const FileViewerDialog: React.FC<FileViewerDialogProps> = ({ file, onClose }) =>
     <Dialog open onOpenChange={() => onClose?.()}>
       <DialogContent className="max-w-4xl w-full max-h-[80vh] overflow-scroll">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold truncate">{file.name}</h2>
+          {/* <h2 className="text-xl font-semibold truncate">{file.name}</h2> */}
+          <DialogTitle>{file.name}</DialogTitle>
           <div className="flex items-center gap-2">
             {/* Download button */}
             <Button
