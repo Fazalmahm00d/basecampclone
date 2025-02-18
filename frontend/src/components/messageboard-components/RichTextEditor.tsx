@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface RichTextEditorProps {
+  hidden:boolean;
   value: string;
   subject: string;
   category: string;
@@ -24,6 +25,7 @@ const MESSAGE_CATEGORIES = [
 
 export default function RichTextEditor({ 
   value, 
+  hidden,
   subject, 
   category, 
   onChange, 
@@ -44,8 +46,10 @@ export default function RichTextEditor({
 
   return (
     <div className="space-y-4">
-      {/* Subject Input */}
-      <div>
+      {
+       !hidden && 
+       <div className='space-y-4'>
+       <div>
         <Input
           placeholder="Subject (optional)"
           value={subject}
@@ -54,7 +58,7 @@ export default function RichTextEditor({
         />
       </div>
 
-      {/* Category Select */}
+
       <div>
         <Select value={category} onValueChange={onCategoryChange}>
           <SelectTrigger>
@@ -69,6 +73,8 @@ export default function RichTextEditor({
           </SelectContent>
         </Select>
       </div>
+      </div>
+      }
 
       {/* Rich Text Editor */}
       <div className="border rounded-lg p-4">

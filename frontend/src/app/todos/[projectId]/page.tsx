@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { toast } from "sonner";
 
 interface Task {
     name: string;
@@ -59,6 +60,7 @@ export default function TodoList() {
             setNewTodoTitle("");
             setNewTodoDescription("");
             setOpen(false);
+            toast.info("A new todo is created")
         } catch (error) {
             console.error("Error creating todo:", error);
         }

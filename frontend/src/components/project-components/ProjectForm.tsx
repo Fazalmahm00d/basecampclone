@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { title } from "process";
 import { toast } from "@/hooks/use-toast";
+import { DialogClose } from "@/components/ui/dialog";
 
 interface Member {
   _id: string;
@@ -15,13 +15,16 @@ interface Member {
   role: string;
 }
 
-export default function ProjectForm() {
-  const user=useSelector((state: RootState) => state.user)
+interface ProjectFormProps {
+  onClose: () => void;
+}
+
+export default function ProjectForm({ onClose }: ProjectFormProps) {
+  const user = useSelector((state: RootState) => state.user);
   const [name, setName] = useState<string>("");
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
   const [availableMembers, setAvailableMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Fetch members from the organization
@@ -38,41 +41,51 @@ export default function ProjectForm() {
       } catch (error) {
         console.error("Error fetching members:", error);
         toast({
-          title:"Error fetching members",
-          variant:"destructive"
-        })
-        setError("Failed to fetch members");
+          title: "Error fetching members",
+          description: "Failed to load organization members. Please try again.",
+          variant: "destructive",
+        });
       }
     }
     fetchMembers();
-  }, []);
+  }, [user.organizationName]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       await axios.post(
         "http://localhost:5000/api/projects",
-        { 
-          name, 
+        {
+          name,
           members: selectedMembers.map(member => member._id),
-          organizationName:user.organizationName 
+          organizationName: user.organizationName
         },
-        { 
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } 
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         }
       );
-      // alert("Project created successfully!");
+      
       toast({
-        title:"Project created successfully!"
-      })
+        title: "Success",
+        description: "Project created successfully!",
+        variant: "default",
+      });
+      
+      // Reset form
       setName("");
       setSelectedMembers([]);
       setSearchTerm("");
-    } catch (err) {
-      setError("Failed to create project. Please try again.");
+      
+      // Close the dialog
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create project. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -90,10 +103,10 @@ export default function ProjectForm() {
   };
 
   // Filter members based on search term
-  const filteredMembers = availableMembers.filter(member => 
-    !selectedMembers.find(m => m._id === member._id) && 
+  const filteredMembers = availableMembers.filter(member =>
+    !selectedMembers.find(m => m._id === member._id) &&
     (member.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     member.email.toLowerCase().includes(searchTerm.toLowerCase()))
+      member.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -117,12 +130,11 @@ export default function ProjectForm() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Project Members
           </label>
-          
-          {/* Selected members display */}
+
           <div className="flex flex-wrap gap-2 mb-3">
             {selectedMembers.map(member => (
-              <Badge 
-                key={member._id} 
+              <Badge
+                key={member._id}
                 variant="secondary"
                 className="flex items-center gap-1"
               >
@@ -138,7 +150,6 @@ export default function ProjectForm() {
             ))}
           </div>
 
-          {/* Member search input */}
           <input
             type="text"
             className="w-full px-3 py-2 border rounded-md mb-2"
@@ -147,7 +158,6 @@ export default function ProjectForm() {
             placeholder="Search members..."
           />
 
-          {/* Filtered members dropdown */}
           {searchTerm && (
             <div className="border rounded-md mt-1 max-h-48 overflow-y-auto">
               {filteredMembers.map(member => (
@@ -168,17 +178,24 @@ export default function ProjectForm() {
           )}
         </div>
 
-        {error && (
-          <p className="text-red-500 text-sm">{error}</p>
-        )}
-
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-full"
-        >
-          {loading ? "Creating..." : "Create Project"}
-        </Button>
+        <div className="flex gap-4">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="flex-1"
+          >
+            {loading ? "Creating..." : "Create Project"}
+          </Button>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          </DialogClose>
+        </div>
       </form>
     </div>
   );

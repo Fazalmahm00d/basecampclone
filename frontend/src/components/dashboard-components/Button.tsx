@@ -17,6 +17,7 @@ export default function ActionButtons() {
   const [orgName,setOrgName]=useState("")
   const [role, setRole] = useState("member");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   
   const [error, setError] = useState("");
 
@@ -42,7 +43,7 @@ export default function ActionButtons() {
         }
       );
 
-      console.log(response, "response from invite");
+      setIsModalOpen(false);
       // alert("Invitation sent successfully!");
       toast({
         title:"Invitation sent successfully"
@@ -67,14 +68,22 @@ export default function ActionButtons() {
       <h1 className="text-center font-bold text-2xl">{isUserOrg}</h1>
       <div className="flex items-center space-x-4 p-4 w-full justify-center">
         
-        <div> <Dialog><DialogTrigger asChild>
-          <Button>Make a new project</Button>
+        <div> 
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>Make a new project</Button>
             </DialogTrigger>
-            <DialogContent><ProjectForm /><DialogClose asChild>
-                <Button variant="outline">Close</Button>
-              </DialogClose></DialogContent></Dialog></div>
+            <DialogContent>
+              <DialogTitle>Create a project</DialogTitle>
+              <ProjectForm onClose={() => setOpen(false)} />
+              {/* <DialogClose asChild>
+                <Button variant="outline" onClick={()=>setOpen(false)}>Close</Button>
+              </DialogClose> */}
+            </DialogContent>
+          </Dialog>
+        </div>
         <div>
-          <Dialog>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">Invite people</Button>
             </DialogTrigger>
@@ -139,9 +148,7 @@ export default function ActionButtons() {
                   </Button>
                 </div>
               </form>
-              <DialogClose asChild>
-                <Button variant="outline">Close</Button>
-              </DialogClose>
+                <Button variant="outline" onClick={()=>setIsModalOpen(false)}>Close</Button>
             </DialogContent>
           </Dialog>
         </div>
