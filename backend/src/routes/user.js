@@ -81,4 +81,25 @@ userRoutes.get('/user-id', async (req, res) => {
     }
 });
 
+userRoutes.get('/user-role', async (req, res) => {
+    try {
+        const { email } = req.query; // Extract email from query params
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const user = await User.findOne({ email }).select('role');
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ userRole:user.role });
+    } catch (error) {
+        console.error('Error fetching user ID:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
   module.exports=userRoutes
