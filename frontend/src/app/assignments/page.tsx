@@ -27,10 +27,12 @@ const user = useSelector((state: RootState) => state.user); // Assuming you have
 
     const fetchAssignedTasks = async () => {
       try {
+        if(user.email){
         const userresponse= await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`)
         const userId=userresponse.data.userId
         const response = await axios.get(`http://localhost:5000/api/todos/tasks/${userId}`);
         setTasks(response.data);
+        }
       } catch (error) {
         console.error("Error fetching tasks", error);
       }

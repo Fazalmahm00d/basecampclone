@@ -18,10 +18,14 @@ export default function ActionButtons() {
   const [role, setRole] = useState("member");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [userRole,setUserRole]=useState("")
   
   const [error, setError] = useState("");
 
-  
+  const fetchUserRole=async()=>{
+    const response = await axios.get(`http://localhost:5000/api/users/user-role?email=${user.email}`)
+    setUserRole(response.data.userRole)
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -58,14 +62,18 @@ export default function ActionButtons() {
 
   useEffect(() => {
     setUserOrg(user.organizationName);
+    if(user.email){
+      fetchUserRole()
+    }
   }, [user]);
 
   return (
     <div>
+      { userRole === "admin" && 
       <div className="flex justify-end w-full p-5">
         <Button variant="outline" onClick={() => window.location.href = '/admin'}>Adminland</Button>
-      </div>
-      <h1 className="text-center font-bold text-2xl">{isUserOrg}</h1>
+        </div>
+            }      <h1 className="text-center font-bold text-2xl">{isUserOrg}</h1>
       <div className="flex items-center space-x-4 p-4 w-full justify-center">
         
         <div> 
