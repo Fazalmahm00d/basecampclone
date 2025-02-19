@@ -53,11 +53,7 @@ interface ProjectMetrics {
   recommendations: string[];
 }
 
-interface ProjectPageProps {
-  params: {
-    projectId: string;
-  };
-}
+
 
 function getInitials(name: string): string {
   return name
@@ -83,6 +79,7 @@ export default function ProjectPage() {
   const user = useSelector((state: RootState) => state.user);
   const { toast } = useToast();
   const router = useRouter();
+  const params = useParams();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [riskAnalysis, setRiskAnalysis] = useState<ProjectMetrics | null>(null);
   const [riskLoading, setRiskLoading] = useState(false);
@@ -105,8 +102,8 @@ export default function ProjectPage() {
   const handleGrpChatNavigate= ()=>{
     router.push(`/group-chats/${params.projectId}`)
   }
-  const params = useParams();
-  console.log(params,"params"); 
+  
+ 
 
   const handleMemberUpdate = async (selectedMembers: string[]) => {
     try {

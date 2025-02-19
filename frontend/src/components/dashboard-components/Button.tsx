@@ -7,6 +7,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, Dia
 import axios from "axios";
 import ProjectForm from "../project-components/ProjectForm";
 import { toast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ActionButtons() {
   const user = useSelector((state: RootState) => state.user);
@@ -18,7 +19,8 @@ export default function ActionButtons() {
   const [role, setRole] = useState("member");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [userRole,setUserRole]=useState("")
+  const [userRole,setUserRole]=useState("");
+  const queryClient=useQueryClient();
   
   const [error, setError] = useState("");
 
@@ -54,7 +56,7 @@ export default function ActionButtons() {
       })
     } catch (err) {
       console.error(err);
-      setError("Failed to send the invitation. Please try again.");
+      setError("Failed to send the invitation. Only admins can send the invite.");
     } finally {
       setLoading(false);
     }
@@ -83,7 +85,9 @@ export default function ActionButtons() {
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Create a project</DialogTitle>
-              <ProjectForm onClose={() => setOpen(false)} />
+              <ProjectForm onClose={() => {
+                queryClient.invalidateQueries(['projects'])
+                setOpen(false)}} />
               {/* <DialogClose asChild>
                 <Button variant="outline" onClick={()=>setOpen(false)}>Close</Button>
               </DialogClose> */}
