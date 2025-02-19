@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from 'react';
 
 interface RichTextEditorProps {
   hidden:boolean;
@@ -26,15 +27,19 @@ const MESSAGE_CATEGORIES = [
 export default function RichTextEditor({ 
   value, 
   hidden,
-  subject, 
-  category, 
   onChange, 
-  onSubjectChange, 
-  onCategoryChange 
 }: RichTextEditorProps) {
+  const [subject,onSubjectChange]=useState("");
+  const [category,onCategoryChange]=useState(""); 
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: value,
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+      },
+    },
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },

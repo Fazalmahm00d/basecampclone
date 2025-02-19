@@ -8,6 +8,7 @@ import { CircleUserRound } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useQuery } from '@tanstack/react-query';
 
 interface Member {
   _id: string;
@@ -43,38 +44,34 @@ function getRandomPastelColor(text: string): string {
 }
 
 export default function ProjectGrid() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
   const user = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        if(user.organizationName){
-        const response = await axios.get<Project[]>(
-          `http://localhost:5000/api/projects/${user.organizationName}`,
-          {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-          }
-        );
-        setProjects(response.data);
+  const fetchProjects = async (organizationName: string): Promise<Project[]> => {
+    const response = await axios.get<Project[]>(
+      `http://localhost:5000/api/projects/${organizationName}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       }
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load projects",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+    );
+    return response.data;
+  };
+  
+  // In your component:
+  const { data: projects, isLoading, error } = useQuery({
+    queryKey: ['projects', user.organizationName],
+    queryFn: () => fetchProjects(user.organizationName),
+    enabled: !!user.organizationName,
+    onError: (error) => {
+      console.error('Error fetching projects:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load projects",
+        variant: "destructive",
+      });
+    }
+  });
 
-    fetchProjects();
-  }, [user]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {[1, 2, 3].map((i) => (
@@ -95,7 +92,7 @@ export default function ProjectGrid() {
     );
   }
 
-  if (projects.length === 0) {
+  if (projects && projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-gray-500">
         <CircleUserRound className="h-16 w-16 mb-4" />
@@ -106,7 +103,8 @@ export default function ProjectGrid() {
   }else{
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {projects.map((project) => (
+      {
+      projects && projects.map((project) => (
         <Card 
           key={project._id}
           className="hover:shadow-lg transition-shadow cursor-pointer"
