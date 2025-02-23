@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { toast } from "@/hooks/use-toast";
 import { DialogClose } from "@/components/ui/dialog";
+import { getCookie } from "@/app/utils/getCookies";
 
 interface Member {
   _id: string;
@@ -31,10 +32,11 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
   useEffect(() => {
     async function fetchMembers() {
       try {
+        const token=getCookie('token')
         const response = await axios.get<Member[]>(
           `http://localhost:5000/api/account/members/${user.organizationName}`,
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: { Authorization: `Bearer ${token}` }
           }
         );
         setAvailableMembers(response.data);
@@ -55,6 +57,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
     setLoading(true);
 
     try {
+    const token=getCookie('token')
       await axios.post(
         "http://localhost:5000/api/projects",
         {
@@ -63,7 +66,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
           organizationName: user.organizationName
         },
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
       

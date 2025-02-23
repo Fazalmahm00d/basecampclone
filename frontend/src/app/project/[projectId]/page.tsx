@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getCookie } from '../../utils/getCookies';
 import { 
   Megaphone, 
   CheckSquare, 
@@ -142,12 +143,13 @@ export default function ProjectPage() {
     }
   };
   useEffect(() => {
+    const token = getCookie('token');
     const fetchProject = async () => {
       try {
         const response = await axios.get<Project>(
           `http://localhost:5000/api/projects/org/${params.projectId}`,
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            headers: { Authorization: `Bearer ${token}` }
           }
         );
         setProject(response.data);

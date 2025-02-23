@@ -8,6 +8,7 @@ import axios from "axios";
 import ProjectForm from "../project-components/ProjectForm";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { getCookie } from "@/app/utils/getCookies";
 
 export default function ActionButtons() {
   const user = useSelector((state: RootState) => state.user);
@@ -34,7 +35,7 @@ export default function ActionButtons() {
     setError("");
 
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token
+      const token = getCookie('token'); // Retrieve the token
       if (!token) {
         throw new Error("Authentication token is missing");
       }
