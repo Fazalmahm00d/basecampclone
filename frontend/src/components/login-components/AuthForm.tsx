@@ -50,6 +50,12 @@ const AuthForm: React.FC = () => {
 
       if (response.data.success) {
         // Redirect or update global auth state
+        const token = response.data.token; // Assuming backend sends token in response
+        if (token) {
+          localStorage.setItem('token', token); // Store token in localStorage
+        } else {
+          throw new Error('No token received from server');
+        }
         // console.log('Auth successful:', response.data);
         toast.success("Authentication success")
         window.location.href = '/dashboard'; // Redirect to dashboard

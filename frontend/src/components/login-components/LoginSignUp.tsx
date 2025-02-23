@@ -48,6 +48,12 @@ export default function LoginSignupForm() {
           );
           // console.log('JWT Token:', response.data.token);
           // console.log('Auth successful');
+          if (token) {
+            localStorage.setItem('token', token); // Store token in localStorage
+          } else {
+            throw new Error('No token received from server');
+          }
+          
           toast.success("Authentication success")
           window.location.href = '/dashboard'
         } else {
