@@ -60,9 +60,9 @@ authRoutes.post('/local/signup', async (req, res) => {
     );
 
     // Set cookie
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
+    res.cookie('token', token, {
+      // httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -94,8 +94,8 @@ authRoutes.post('/local/login', (req, res, next) => {
     );
 
     // Set cookie
-    res.cookie('authToken', token, {
-      httpOnly: true,
+    res.cookie('token', token, {
+      // httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -137,8 +137,8 @@ authRoutes.post('/google', async (req, res) => {
     );
 
     // Set cookie
-    res.cookie('authToken', token, {
-      httpOnly: true,
+    res.cookie('token', token, {
+      // httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -153,7 +153,7 @@ authRoutes.post('/google', async (req, res) => {
 authRoutes.get('/me', async (req, res) => {
   try {
     // Verify cookie token
-    const token = req.cookies.authToken;
+    const token = req.cookies.token;
     
     if (!token) return res.status(401).json({ authenticated: false });
 
@@ -169,9 +169,9 @@ authRoutes.get('/me', async (req, res) => {
 });
 
 authRoutes.post('/logout', (req, res) => {
-  res.clearCookie('authToken', {
+  res.clearCookie('token', {
     // domain: process.env.COOKIE_DOMAIN,
-    httpOnly: true,
+    // httpOnly: true,
     secure: false,
     // sameSite: 'lax'
   });

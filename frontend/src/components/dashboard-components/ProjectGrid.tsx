@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useQuery } from '@tanstack/react-query';
+import { getCookie } from '@/app/utils/getCookies';
 
 interface Member {
   _id: string;
@@ -47,10 +48,11 @@ export default function ProjectGrid() {
   const user = useSelector((state: RootState) => state.user);
 
   const fetchProjects = async (organizationName: string): Promise<Project[]> => {
+    const token=getCookie('token')
     const response = await axios.get<Project[]>(
       `http://localhost:5000/api/projects/${organizationName}`,
       {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${token}`}
       }
     );
     return response.data;
