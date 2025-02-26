@@ -27,17 +27,17 @@ export default function MessageBoard() {
     const [open, setOpen] = useState(false);  // Controls modal state
     const params = useParams();
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/messages/${params.projectId}`)
+        axios.get(`https://basecamp-c3ay.onrender.com/api/messages/${params.projectId}`)
             .then(response => setMessages(response.data))
             .catch(error => console.error("Error fetching messages:", error));
     }, [params.projectId]);
 
     const createMessage = async () => {
         // if (!newMessage.trim()) return;
-        const userresponse= await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`)
+        const userresponse= await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`)
         const userId=userresponse.data.userId
         const messageData = { content: newMessage, sender: userId, project: params.projectId };
-        const response = await axios.post("http://localhost:5000/api/messages", messageData);
+        const response = await axios.post("https://basecamp-c3ay.onrender.com/api/messages", messageData);
 
         setMessages([response.data, ...messages]); // Add new message at the top
         setNewMessage("");

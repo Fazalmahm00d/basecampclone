@@ -30,9 +30,9 @@ export default function Assignments() {
     const fetchAssignedTasks = async () => {
       try {
         if(user.email){
-        const userresponse= await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`)
+        const userresponse= await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`)
         const userId=userresponse.data.userId
-        const response = await axios.get(`http://localhost:5000/api/todos/tasks/${userId}`);
+        const response = await axios.get(`https://basecamp-c3ay.onrender.com/api/todos/tasks/${userId}`);
         setTasks(response.data);
         }
       } catch (error) {
@@ -66,7 +66,7 @@ export default function Assignments() {
                   </div>
                 )}
               </div>
-              {new Date(task.deadline) < new Date() && !task.isCompleted && (
+              {new Date(task?.deadline) < new Date() && !task.isCompleted && (
                 <Badge variant="destructive" className="flex items-center">
                   <AlertCircle className="w-3 h-3 mr-1" />
                   Overdue
@@ -74,7 +74,7 @@ export default function Assignments() {
               )}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {task.todo.title} • {task.todo.project.name}
+              {task?.todo?.title} • {task?.todo?.project?.name}
             </div>
           </CardHeader>
         </Card>

@@ -66,7 +66,7 @@ const SingleChatInterface = () => {
       try {
         if (!user?.email) return;
 
-        const response = await axios.get(`http://localhost:5000/api/users/user-id?email=${encodeURIComponent(user.email)}`);
+        const response = await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${encodeURIComponent(user.email)}`);
         if (response.data?.userId) {
           setCurrentUser({ _id: response.data.userId, username: user.name });
           localStorage.setItem('userId', response.data.userId);
@@ -85,7 +85,7 @@ const SingleChatInterface = () => {
   useEffect(() => {
     if (!currentUser?._id) return;
   
-    socketRef.current = io('http://localhost:5000', {
+    socketRef.current = io('https://basecamp-c3ay.onrender.com', {
       path: '/direct-chat',
       transports: ['websocket'],
     });
@@ -127,10 +127,10 @@ const SingleChatInterface = () => {
       if (!currentUser?._id || !recipientId || !accountId) return;
 
       try {
-        const messagesRes = await fetch(`http://localhost:5000/api/direct-messages/messages/${currentUser._id}/${recipientId}?accountId=${accountId}`);
+        const messagesRes = await fetch(`https://basecamp-c3ay.onrender.com/api/direct-messages/messages/${currentUser._id}/${recipientId}?accountId=${accountId}`);
         const messagesData = await messagesRes.json();
         setMessages(messagesData);
-        const recipientRes=await fetch(`http://localhost:5000/api/account/${accountId}/members/${recipientId}`)
+        const recipientRes=await fetch(`https://basecamp-c3ay.onrender.com/api/account/${accountId}/members/${recipientId}`)
         const recipientData=await recipientRes.json();
 
         setRecipient(recipientData.user)

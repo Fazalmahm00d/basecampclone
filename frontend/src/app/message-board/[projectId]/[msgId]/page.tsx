@@ -65,7 +65,7 @@ export default function MessageDetail() {
 
     const fetchMessage = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/messages/message/${params.msgId}`);
+            const response = await axios.get(`https://basecamp-c3ay.onrender.com/api/messages/message/${params.msgId}`);
             setMessage(response.data);
         } catch (error) {
             console.error("Error fetching message:", error);
@@ -76,11 +76,11 @@ export default function MessageDetail() {
         if (!replyContent.trim()) return;
 
         try {
-            const userResponse = await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`);
+            const userResponse = await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`);
             const userId = userResponse.data.userId;
 
             // Add reply to the existing message
-            const response = await axios.post(`http://localhost:5000/api/messages/${params.msgId}/reply`, {
+            const response = await axios.post(`https://basecamp-c3ay.onrender.com/api/messages/${params.msgId}/reply`, {
                 content: replyContent,
                 sender: userId
             });

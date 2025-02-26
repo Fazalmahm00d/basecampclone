@@ -28,7 +28,7 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
 
   // const fetchUsers = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+  //     const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`);
   //     const data = await response.json();
   //     setUsers(data);
   //   } catch (error) {
@@ -44,7 +44,7 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/merge-users', {
+      const response = await fetch('https://basecamp-c3ay.onrender.com/api/admin/merge-users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

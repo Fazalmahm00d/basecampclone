@@ -50,7 +50,7 @@ export default function ProjectGrid() {
   const fetchProjects = async (organizationName: string): Promise<Project[]> => {
     const token=getCookie('token')
     const response = await axios.get<Project[]>(
-      `http://localhost:5000/api/projects/${organizationName}`,
+      `https://basecamp-c3ay.onrender.com/api/projects/${organizationName}`,
       {
         headers: { Authorization: `Bearer ${token}`}
       }

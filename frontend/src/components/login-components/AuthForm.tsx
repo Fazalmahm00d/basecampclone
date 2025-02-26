@@ -41,8 +41,8 @@ const AuthForm: React.FC = () => {
 
     try {
       const url = isSignup
-        ? 'http://localhost:5000/api/auth/local/signup'
-        : 'http://localhost:5000/api/auth/local/login';
+        ? 'https://basecamp-c3ay.onrender.com/api/auth/local/signup'
+        : 'https://basecamp-c3ay.onrender.com/api/auth/local/login';
 
       const response = await axios.post(url, formData, {
         withCredentials: true, // Include cookies

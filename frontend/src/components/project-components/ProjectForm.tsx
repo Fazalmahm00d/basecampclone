@@ -34,7 +34,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
       try {
         const token=getCookie('token')
         const response = await axios.get<Member[]>(
-          `http://localhost:5000/api/account/members/${user.organizationName}`,
+          `https://basecamp-c3ay.onrender.com/api/account/members/${user.organizationName}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -59,7 +59,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
     try {
     const token=getCookie('token')
       await axios.post(
-        "http://localhost:5000/api/projects",
+        "https://basecamp-c3ay.onrender.com/api/projects",
         {
           name,
           members: selectedMembers.map(member => member._id),

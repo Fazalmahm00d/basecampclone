@@ -45,7 +45,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/users/profile?email=${user.email}`,
+        `https://basecamp-c3ay.onrender.com/api/users/profile?email=${user.email}`,
         formData,
         {
           headers: { "Content-Type": "application/json" },

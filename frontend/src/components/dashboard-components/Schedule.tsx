@@ -29,7 +29,7 @@ export default function Schedule() {
       try {
         if (!user) return;
         if(user.organizationName){
-        const response = await axios.get<Event[]>(`http://localhost:5000/api/event/accounts/${user.organizationName}/events`);
+        const response = await axios.get<Event[]>(`https://basecamp-c3ay.onrender.com/api/event/accounts/${user.organizationName}/events`);
         setEvents(response.data.map(event => ({
           ...event,
           start: new Date(event.start),

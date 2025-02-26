@@ -66,7 +66,7 @@ export default function TodoDetail() {
 
     const fetchMembers = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/projects/org/${projectId}`);
+            const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/org/${projectId}`);
             const project = await response.json();
             setMembers(project.members);
         } catch (error) {
@@ -90,7 +90,7 @@ export default function TodoDetail() {
 
     const fetchTodo = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/todos/todo/${todoId}`);
+            const response = await axios.get(`https://basecamp-c3ay.onrender.com/api/todos/todo/${todoId}`);
             setTodo(response.data);
         } catch (error) {
             console.error("Error fetching todo:", error);
@@ -101,7 +101,7 @@ export default function TodoDetail() {
         if (!newTaskName.trim()) return;
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/todos/${todoId}/task`, {
+            const response = await axios.post(`https://basecamp-c3ay.onrender.com/api/todos/${todoId}/task`, {
                 name: newTaskName,
                 description: newTaskDescription,
                 isCompleted: false,
@@ -122,7 +122,7 @@ export default function TodoDetail() {
         if (!todo) return;
 
         try {
-            const response = await axios.patch(`http://localhost:5000/api/todos/${todoId}/task/${index}`, {
+            const response = await axios.patch(`https://basecamp-c3ay.onrender.com/api/todos/${todoId}/task/${index}`, {
                 isCompleted: !todo.tasks[index].isCompleted
             });
 

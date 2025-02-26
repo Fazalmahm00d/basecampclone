@@ -21,7 +21,7 @@ export default function AdminDashboard({ organizationName }: AdminDashboardProps
     try {
       if (!user?.email) return;
       
-      const response = await axios.get<{ userId: string }>(`http://localhost:5000/api/users/user-id?email=${user.email}`);
+      const response = await axios.get<{ userId: string }>(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`);
       setUserId(response.data.userId);
     } catch (error) {
       console.error("Error fetching user ID:", error);

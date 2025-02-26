@@ -32,7 +32,7 @@ const PasswordDialog: React.FC<PasswordDialogProps> = ({
     try {
       // Send the password and token to the accept-invite API
       const response = await axios.post(
-        "http://localhost:5000/api/accept-invite",
+        "https://basecamp-c3ay.onrender.com/api/accept-invite",
         { token: inviteToken, password }
       );
 

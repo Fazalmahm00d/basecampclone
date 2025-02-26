@@ -26,7 +26,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
   const queryClient=useQueryClient()
 
   const fetchGroups = async (organizationName:string) => {
-    const response = await fetch(`http://localhost:5000/api/projects/${organizationName}`);
+    const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/${organizationName}`);
     if (!response.ok) {
       throw new Error('Failed to fetch groups');
     }
@@ -34,7 +34,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
   };
   
   const fetchMembers = async (organizationName:string) => {
-    const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+    const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`);
     if (!response.ok) {
       throw new Error('Failed to fetch members');
     }
@@ -66,7 +66,7 @@ export default function GroupManagement({ organizationName, adminId}: { organiza
   }
   const createGroup = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/groups', {
+      const response = await fetch('https://basecamp-c3ay.onrender.com/api/admin/groups', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

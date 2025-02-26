@@ -50,7 +50,7 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
     if (!isOpen || !user) return;
 
     // Fetch account members
-    fetch(`http://localhost:5000/api/account/members/${user.organizationName}`)
+    fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${user.organizationName}`)
       .then((res: Response) => res.json())
       .then((data: Member[]) => setMembers(data))
       .catch((err: Error) => console.error('Error fetching members:', err));
@@ -121,7 +121,7 @@ const NewChatDialog: React.FC<NewChatDialogProps> = ({
 
 const getAccountId = async (organizationName: string): Promise<string> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/account/id/${organizationName}`);
+    const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/id/${organizationName}`);
     if (!response.ok) {
       throw new Error('Failed to fetch account ID');
     }
@@ -163,7 +163,7 @@ export default function Header() {
     event.preventDefault();
     
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, {
+      await axios.post('https://basecamp-c3ay.onrender.com/api/auth/logout', {}, {
         withCredentials: true // Required for cookies
       });
       
@@ -208,8 +208,12 @@ export default function Header() {
     console.log("use effect called")
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/auth/me', {
-          credentials: 'include' // Required for cookies
+        const response = await fetch('https://basecamp-c3ay.onrender.com/api/auth/me', {
+          credentials: 'include' ,// Required for cookies
+          headers: {
+            'Content-Type': 'application/json'
+            // You might need to add other headers if required by the API
+          }
         });
         
         const data = await response.json();
