@@ -62,7 +62,9 @@ authRoutes.post('/local/signup', async (req, res) => {
     // Set cookie
     res.cookie('token', token, {
       // httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      secure: true, // Only sent over HTTPS
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -96,7 +98,9 @@ authRoutes.post('/local/login', (req, res, next) => {
     // Set cookie
     res.cookie('token', token, {
       // httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      secure: true, // Only sent over HTTPS
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -138,8 +142,9 @@ authRoutes.post('/google', async (req, res) => {
 
     // Set cookie
     res.cookie('token', token, {
-      // httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      secure: true, // Only sent over HTTPS
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 

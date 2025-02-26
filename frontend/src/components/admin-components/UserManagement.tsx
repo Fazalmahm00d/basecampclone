@@ -50,7 +50,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
     try {
       // Fetch account ID
       const accountResponse = await fetch(
-        `http://localhost:5000/api/account/id/${organizationName}`
+        `https://basecamp-c3ay.onrender.com/api/account/id/${organizationName}`
       );
       
       if (!accountResponse.ok) throw new Error('Failed to fetch account ID');
@@ -59,7 +59,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
 
       // Fetch members
       const membersResponse = await fetch(
-        `http://localhost:5000/api/account/members/${organizationName}`
+        `https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`
       );
       
       if (!membersResponse.ok) throw new Error('Failed to fetch members');
@@ -81,7 +81,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
   const handleDeleteMember = async (user: User) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/account/${accountId}/members/${user._id}`,
+        `https://basecamp-c3ay.onrender.com/api/account/${accountId}/members/${user._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -114,7 +114,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
   const handleRoleUpdate = async (targetUserId: string, newRole: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/account/${accountId}/members/${targetUserId}/role`,
+        `https://basecamp-c3ay.onrender.com/api/account/${accountId}/members/${targetUserId}/role`,
         {
           method: 'PUT',
           headers: {

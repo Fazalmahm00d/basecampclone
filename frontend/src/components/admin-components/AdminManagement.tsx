@@ -25,7 +25,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
 
   // const fetchUsers = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+  //     const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`);
   //     const data = await response.json();
   //     setUsers(data);
   //   } catch (error) {
@@ -37,7 +37,7 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
   const toggleAdmin = async (userId: string, currentRole: string) => {
     try {
       const action = currentRole === 'admin' ? 'remove' : 'add';
-      const response = await fetch('http://localhost:5000/api/admin/administrators', {
+      const response = await fetch('https://basecamp-c3ay.onrender.com/api/admin/administrators', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

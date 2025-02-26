@@ -40,7 +40,7 @@ export default function LoginSignupForm() {
           const token = await user.getIdToken();
       
           // Send token to backend
-          const response = await axios.post('http://localhost:5000/api/auth/google', 
+          const response = await axios.post('https://basecamp-c3ay.onrender.com/api/auth/google', 
             { idToken: token },
             {
               withCredentials: true // This is crucial for cookies

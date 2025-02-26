@@ -53,7 +53,7 @@ useEffect(() => {
         if (!user?.email) return; // Ensure email exists before making a request
 
         const response = await axios.get<{ userId: string }>(
-          `http://localhost:5000/api/users/user-id?email=${user.email}`
+          `https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`
         );
 
         console.log(response.data, "user response for ID");
@@ -77,7 +77,7 @@ useEffect(() => {
   useEffect(() => {
     if (!currentUser?._id) return;
 
-    const socketUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const socketUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://basecamp-c3ay.onrender.com';
     const newSocket = io(socketUrl, {
        // Match the path from backend
       transports: ['polling', 'websocket'],
@@ -130,7 +130,7 @@ useEffect(() => {
   // Fetch messages
   const fetchMessages = async (pageNum: number) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/groupchat/projects/${projectId}/chat/messages?page=${pageNum}&limit=50`);
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/groupchat/projects/${projectId}/chat/messages?page=${pageNum}&limit=50`);
       if (!response.ok) throw new Error('Failed to fetch messages');
       
       const data = await response.json();
@@ -151,7 +151,7 @@ useEffect(() => {
   // Fetch participants
   const fetchParticipants = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/groupchat/projects/${projectId}/chat/participants`);
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/groupchat/projects/${projectId}/chat/participants`);
       if (!response.ok) throw new Error('Failed to fetch participants');
       
       const data = await response.json();
@@ -164,7 +164,7 @@ useEffect(() => {
   // Mark message as read
   const markMessageAsRead = async (messageId: string) => {
     try {
-      await fetch(`http://localhost:5000/api/groupchat/projects/${projectId}/chat/messages/read`, {
+      await fetch(`https://basecamp-c3ay.onrender.com/api/groupchat/projects/${projectId}/chat/messages/read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

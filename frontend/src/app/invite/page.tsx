@@ -43,7 +43,7 @@ const InvitationPage = () => {
       if (inviteToken) {
         try {
           const response = await axios.get<UserInfo>(
-            `http://localhost:5000/api/verify-invite?token=${inviteToken}`
+            `https://basecamp-c3ay.onrender.com/api/verify-invite?token=${inviteToken}`
           );
           
           if (response.data) {
@@ -70,7 +70,7 @@ const InvitationPage = () => {
   const handlePasswordSubmit = async (password: string) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/accept-invite',
+        'https://basecamp-c3ay.onrender.com/api/accept-invite',
         {
           token: inviteToken,
           password

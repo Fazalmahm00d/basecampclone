@@ -108,7 +108,7 @@ export default function ProjectPage() {
 
   const handleMemberUpdate = async (selectedMembers: string[]) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${project?._id}/members`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/${project?._id}/members`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ members: selectedMembers })
@@ -147,7 +147,7 @@ export default function ProjectPage() {
     const fetchProject = async () => {
       try {
         const response = await axios.get<Project>(
-          `http://localhost:5000/api/projects/org/${params.projectId}`,
+          `https://basecamp-c3ay.onrender.com/api/projects/org/${params.projectId}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -166,7 +166,7 @@ export default function ProjectPage() {
     };
       const fetchTasks = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/projects/status/${params.projectId}/tasks`);
+            const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/status/${params.projectId}/tasks`);
             if (!response.ok) throw new Error('Failed to fetch tasks');
             const data = await response.json();
             setTasks(data);

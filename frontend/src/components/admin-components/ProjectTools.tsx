@@ -20,7 +20,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${organizationName}`);
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/${organizationName}`);
       const data = await response.json();
       // setProjects(data);
       return data
@@ -40,7 +40,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
 
   const handleRename = async (projectId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/projects/${projectId}/rename`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/admin/projects/${projectId}/rename`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
 
   const handleDelete = async (projectId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/projects/${projectId}`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/admin/projects/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

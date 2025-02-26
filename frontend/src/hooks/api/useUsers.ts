@@ -5,7 +5,7 @@ export function useUsers(organizationName: string) {
   return useQuery({
     queryKey: ['users', organizationName],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`);
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }

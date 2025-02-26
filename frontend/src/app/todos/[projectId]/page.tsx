@@ -35,7 +35,7 @@ export default function TodoList() {
     const params = useParams();
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/todos/${params.projectId}`)
+        axios.get(`https://basecamp-c3ay.onrender.com/api/todos/${params.projectId}`)
             .then(response => setTodos(response.data))
             .catch(error => console.error("Error fetching todos:", error));
     }, [params.projectId]);
@@ -44,7 +44,7 @@ export default function TodoList() {
         if (!newTodoTitle.trim()) return;
 
         try {
-            const userResponse = await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`);
+            const userResponse = await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`);
             const userId = userResponse.data.userId;
 
             const todoData = {
@@ -55,7 +55,7 @@ export default function TodoList() {
                 tasks: []
             };
 
-            const response = await axios.post("http://localhost:5000/api/todos", todoData);
+            const response = await axios.post("https://basecamp-c3ay.onrender.com/api/todos", todoData);
             setTodos([response.data, ...todos]);
             setNewTodoTitle("");
             setNewTodoDescription("");

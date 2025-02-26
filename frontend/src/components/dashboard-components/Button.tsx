@@ -26,7 +26,7 @@ export default function ActionButtons() {
   const [error, setError] = useState("");
 
   const fetchUserRole=async()=>{
-    const response = await axios.get(`http://localhost:5000/api/users/user-role?email=${user.email}`)
+    const response = await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-role?email=${user.email}`)
     setUserRole(response.data.userRole)
   }
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,7 +41,7 @@ export default function ActionButtons() {
       }
 
       const response = await axios.post(
-        'http://localhost:5000/api/invite',
+        'https://basecamp-c3ay.onrender.com/api/invite',
         { username:name,adminemail:user.email,email, role, organizationName:orgName},
         {
           headers: {

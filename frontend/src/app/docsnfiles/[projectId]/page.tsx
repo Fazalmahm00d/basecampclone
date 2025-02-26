@@ -68,9 +68,9 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
   const handleCreateDocument = async (): Promise<void> => {
     try {
-      const userresponse= await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`)
+      const userresponse= await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`)
       const userId=userresponse.data.userId
-      await axios.post(`http://localhost:5000/api/files/${projectId}/${userId}/documents`, {
+      await axios.post(`https://basecamp-c3ay.onrender.com/api/files/${projectId}/${userId}/documents`, {
         name: fileName,
         content: fileContent,
         folderId: currentFolder
@@ -95,7 +95,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
   const handleCreateFolder = async () => {
     try {
-      await axios.post(`http://localhost:5000/api/files/${projectId}/folders`, {
+      await axios.post(`https://basecamp-c3ay.onrender.com/api/files/${projectId}/folders`, {
         name: folderName,
         parentId: currentFolder
       });
@@ -115,8 +115,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     try {
       setIsLoading(true);
       const [filesResponse, foldersResponse] = await Promise.all([
-        axios.get(`http://localhost:5000/api/files/${projectId}/files?folderId=${currentFolder || ''}`),
-        axios.get(`http://localhost:5000/api/files/${projectId}/folders`)
+        axios.get(`https://basecamp-c3ay.onrender.com/api/files/${projectId}/files?folderId=${currentFolder || ''}`),
+        axios.get(`https://basecamp-c3ay.onrender.com/api/files/${projectId}/folders`)
       ]);
       
       setFiles(filesResponse.data);
@@ -143,12 +143,12 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     }
   
     try {
-      const userresponse = await axios.get(`http://localhost:5000/api/users/user-id?email=${user.email}`);
+      const userresponse = await axios.get(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`);
       const userId = userresponse.data.userId;
   
       console.log(formData, "form data");
   
-      await axios.post(`http://localhost:5000/api/files/${projectId}/${userId}/upload`, formData);
+      await axios.post(`https://basecamp-c3ay.onrender.com/api/files/${projectId}/${userId}/upload`, formData);
       fetchContents();
       setSelectedFile(null);
       setOpen(false)

@@ -37,7 +37,7 @@ export const ProjectMemberDialog: React.FC<ProjectMemberDialogProps> = ({
   useEffect(() => {
     const fetchAccountMembers = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/account/members/${organizationName}`);
+        const response = await fetch(`https://basecamp-c3ay.onrender.com/api/account/members/${organizationName}`);
         const members = await response.json();
         setAccountMembers(members);
       } catch (error) {

@@ -210,7 +210,7 @@ const [date, setDate] = useState(new Date());
       try {
         if (!user?.email) return;
         
-        const response = await axios.get<{ userId: string }>(`http://localhost:5000/api/users/user-id?email=${user.email}`);
+        const response = await axios.get<{ userId: string }>(`https://basecamp-c3ay.onrender.com/api/users/user-id?email=${user.email}`);
         setUserId(response.data.userId);
       } catch (error) {
         console.error("Error fetching user ID:", error);
@@ -228,7 +228,7 @@ const [date, setDate] = useState(new Date());
 
   const fetchProjectData = async () => {
     try {
-      const projectRes = await fetch(`http://localhost:5000/api/projects/org/${projectId}`);
+      const projectRes = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/org/${projectId}`);
       const projectData = await projectRes.json();
       setProject(projectData);
     } catch (error) {
@@ -256,7 +256,7 @@ const [date, setDate] = useState(new Date());
 const fetchEvents = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://localhost:5000/api/event/projects/${projectId}/events`);
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/event/projects/${projectId}/events`);
       const data = await response.json();
       console.log(data,"events data")
       // Check if data is an array before mapping
@@ -284,7 +284,7 @@ const fetchEvents = async () => {
 
   const handleEventAdd = async (eventData: Partial<Event>) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/event/projects/${projectId}/events`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/event/projects/${projectId}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -312,7 +312,7 @@ const fetchEvents = async () => {
 
   const handleEventUpdate = async (eventId: string, updateData: Partial<Event>) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/event/projects/${projectId}/events/${eventId}`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/event/projects/${projectId}/events/${eventId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -333,7 +333,7 @@ const fetchEvents = async () => {
 
   const handleEventDelete = async (eventId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/event/projects/${projectId}/events/${eventId}`, {
+      const response = await fetch(`https://basecamp-c3ay.onrender.com/api/event/projects/${projectId}/events/${eventId}`, {
         method: 'DELETE',
       });
       
