@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { format } from "date-fns";
 import RichTextEditor from "@/components/messageboard-components/RichTextEditor";
-import AiButton from "@/components/animata/button/ai-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 

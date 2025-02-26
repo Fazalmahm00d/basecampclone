@@ -29,12 +29,12 @@ interface Member {
   email: string;
 }
 
-interface Task {
-  task_name: string;
-  task_description: string;
-  deadline?: string;
-  is_completed: boolean;
-}
+// interface Task {
+//   task_name: string;
+//   task_description: string;
+//   deadline?: string;
+//   is_completed: boolean;
+// }
 
 interface Project {
   _id: string;
@@ -45,14 +45,14 @@ interface Project {
   lastUpdated?: string;
 }
 
-interface ProjectMetrics {
-  total_tasks: number;
-  completed_tasks: number;
-  completion_rate: number;
-  delayed_tasks: number;
-  high_risk_tasks: number;
-  recommendations: string[];
-}
+// interface ProjectMetrics {
+//   total_tasks: number;
+//   completed_tasks: number;
+//   completion_rate: number;
+//   delayed_tasks: number;
+//   high_risk_tasks: number;
+//   recommendations: string[];
+// }
 
 
 

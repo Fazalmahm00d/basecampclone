@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { format } from "date-fns";
 import MemberSelect from "@/components/todo-components/MemberSelect";
 import { Badge } from "@/components/ui/badge";
