@@ -63,7 +63,7 @@ export default function ProjectGrid() {
     queryKey: ['projects', user.organizationName],
     queryFn: () => fetchProjects(user.organizationName),
     enabled: !!user.organizationName,
-    onError: (error) => {
+    onError: (error:any) => {
       console.error('Error fetching projects:', error);
       toast({
         title: "Error",

@@ -14,7 +14,7 @@ interface Task {
   name: string;
   description?: string;
   isCompleted: boolean;
-  deadline?: string;
+  deadline?: any;
   assignedTo: { _id: string; username: string };
   todo: { title: string; project: { name: string } };
 }
@@ -66,7 +66,7 @@ export default function Assignments() {
                   </div>
                 )}
               </div>
-              {new Date(task?.deadline) < new Date() && !task.isCompleted && (
+              {new Date(task.deadline) < new Date() && !task.isCompleted && (
                 <Badge variant="destructive" className="flex items-center">
                   <AlertCircle className="w-3 h-3 mr-1" />
                   Overdue
