@@ -211,7 +211,7 @@ export default function ProjectPage() {
     </div>
 
     {/* Risk Analysis Section */}
-    <Card className=" shadow-md">
+    {/* <Card className=" shadow-md">
       <CardHeader>
         <h2 className="text-2xl font-bold text-gray-900">Risk Analysis</h2>
       </CardHeader>
@@ -235,7 +235,7 @@ export default function ProjectPage() {
           </div>
         )}
       </CardContent>
-    </Card>
+    </Card> */}
 
     {/* Team Members */}
     <div className="flex items-center gap-2 my-8">
