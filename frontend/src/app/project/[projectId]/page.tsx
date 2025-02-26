@@ -122,26 +122,7 @@ export default function ProjectPage() {
       console.error('Failed to update project members:', error);
     }
   };
-  const analyzeRisk = async (e: React.FormEvent): Promise<ProjectMetrics | null> => {
-    e.preventDefault();
-    setRiskLoading(true);
   
-    console.log(tasks, "tasks when called analysis");
-  
-    try {
-      // Adjusted the payload to not use `JSON.stringify()` when sending the `tasks` array directly
-      const response = await axios.post('/api/analyze', { tasks });
-      console.log(response,"response from anaylzing")
-      // Assuming response.data contains the analyzed result
-      setRiskAnalysis(response.data[0]);
-      return response.data;
-    } catch (err) {
-      console.error(err);
-      return null; // You might want to handle this better depending on the use case
-    } finally {
-      setRiskLoading(false);
-    }
-  };
   useEffect(() => {
     const token = getCookie('token');
     const fetchProject = async () => {

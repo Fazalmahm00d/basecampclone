@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { Calendar as ShadCNCalendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 
 interface CustomCalendarProps {
   highlightedDates?: Date[]; // Custom prop to highlight dates

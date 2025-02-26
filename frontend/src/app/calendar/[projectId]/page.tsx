@@ -15,30 +15,6 @@ import { DialogTrigger } from '@radix-ui/react-dialog';
 import { toast } from '@/hooks/use-toast';
 
 const localizer = momentLocalizer(moment);
-// Custom calendar styles
-const calendarStyles = {
-    height: 'calc(100vh - 200px)',
-    margin: '20px',
-    padding: '20px',
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-  };
-  
-  // Custom event styles
-  const eventStyleGetter = (event: any) => {
-    return {
-      style: {
-        backgroundColor: '#3182ce',
-        borderRadius: '4px',
-        opacity: 0.8,
-        color: 'white',
-        border: 'none',
-        display: 'block',
-        padding: '2px 5px'
-      }
-    };
-  };
 export interface User {
   _id: string;
   username: string;

@@ -51,12 +51,13 @@ const InvitationPage = () => {
             console.log(response.data,"user info after verify invite")
             setIsPasswordDialogOpen(true);
           }
-        } catch (error) {
+        } catch (error:any) {
           if (axios.isAxiosError(error)) {
             console.log("error",error)
             setError(error.response?.data?.error || "Invalid or expired invitation link.");
           } else {
-            setError("An unexpected error occurred.");
+            setError(`Failed to load more messages: ${error.message || error}`);
+
           }
         } finally {
           setIsLoading(false);
@@ -117,7 +118,7 @@ const InvitationPage = () => {
 };
 
 // Password Dialog Component
-const PasswordDialog = ({ isOpen, onClose, inviteToken, onSubmit }: PasswordDialogProps) => {
+const PasswordDialog = ({ isOpen, onClose, onSubmit }: PasswordDialogProps) => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -138,8 +139,9 @@ const PasswordDialog = ({ isOpen, onClose, inviteToken, onSubmit }: PasswordDial
     try {
       await onSubmit(password);
       onClose();
-    } catch (err) {
-      setError("Failed to set password");
+    } catch (err:any) {
+      setError(`Failed to set password: ${err.message || err}`);
+
     }
   };
 

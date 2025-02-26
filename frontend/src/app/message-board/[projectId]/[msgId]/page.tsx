@@ -84,7 +84,7 @@ export default function MessageDetail() {
                 content: replyContent,
                 sender: userId
             });
-
+            console.log(response,"response")
             // Refresh the message to get the updated replies
             await fetchMessage();
             
@@ -157,7 +157,7 @@ export default function MessageDetail() {
                 </div>
             </div>
             {/* <Button onClick={handleSummary}>{loading ? 'Summarizing...' : 'Summarize Message'}</Button> */}
-           <AiButton text="Generate summary" clickhandler={handleSummary} loading={loading}/>
+           {/* <AiButton text="Generate summary" clickhandler={handleSummary} loading={loading}/> */}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {summary && (
                 <Card>

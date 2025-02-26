@@ -38,7 +38,6 @@ interface NewChatDialogProps {
 const NewChatDialog: React.FC<NewChatDialogProps> = ({ 
   isOpen, 
   onClose, 
-  accountId, 
   onMemberSelect 
 }) => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -127,7 +126,7 @@ const getAccountId = async (organizationName: string): Promise<string> => {
     }
     const data = await response.json();
     return data.accountId;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error getting account ID:', error);
     throw error;
   }
@@ -170,7 +169,7 @@ export default function Header() {
       console.log("logged out")
       dispatch(logout())
       window.location.href = '/';
-    } catch (error) {
+    } catch (error:any) {
       console.error('Logout failed:', error);
       // Handle error (show message to user)
     }
@@ -195,8 +194,8 @@ export default function Header() {
         const id = await getAccountId(user.organizationName);
         setAccountId(id);
         dispatch(setAccount({ name: user.organizationName, accountId: id }))
-      } catch (error) {
-        console.log("could not find account id");
+      } catch (error:any) {
+        console.log("could not find account id",error);
       }
     };
   
@@ -224,12 +223,13 @@ export default function Header() {
           user: data.user,
           loading: false
         });
-      } catch (error) {
+      } catch (error:any) {
         setAuthState({
           isAuthenticated: false,
           user: null,
           loading: false
         });
+        console.log(error)
       }
     };
 

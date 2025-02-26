@@ -26,7 +26,6 @@ interface ProjectMemberDialogProps {
 
 export const ProjectMemberDialog: React.FC<ProjectMemberDialogProps> = ({
   organizationName,
-  projectId,
   currentMembers,
   onMemberUpdate
 }) => {

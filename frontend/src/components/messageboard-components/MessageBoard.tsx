@@ -1,7 +1,6 @@
 // components/MessageBoard.tsx
 import { useEffect, useState } from 'react';
 import RichTextEditor from './RichTextEditor';
-import MessageThread from './MessageThread';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { RootState } from '@/redux/store';
@@ -64,6 +63,7 @@ export default function MessageBoard() {
                       </DialogHeader>
 
                       <RichTextEditor 
+                          hidden={false}
                           value={newMessage}
                           subject={subject}
                           category={category}

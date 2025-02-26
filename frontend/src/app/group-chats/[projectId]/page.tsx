@@ -143,8 +143,8 @@ useEffect(() => {
       
       setHasMore(data.hasMore);
       setPage(pageNum);
-    } catch (err) {
-      throw new Error('Error fetching messages');
+    } catch (err:any) {
+      throw new Error('Error fetching messages',err);
     }
   };
 
@@ -156,25 +156,25 @@ useEffect(() => {
       
       const data = await response.json();
       setParticipants(data);
-    } catch (err) {
-      throw new Error('Error fetching participants');
+    } catch (err:any) {
+      throw new Error('Error fetching participants',err);
     }
   };
 
   // Mark message as read
-  const markMessageAsRead = async (messageId: string) => {
-    try {
-      await fetch(`https://basecamp-c3ay.onrender.com/api/groupchat/projects/${projectId}/chat/messages/read`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ messageIds: [messageId] }),
-      });
-    } catch (err) {
-      console.error('Error marking message as read:', err);
-    }
-  };
+  // const markMessageAsRead = async (messageId: string) => {
+  //   try {
+  //     await fetch(`https://basecamp-c3ay.onrender.com/api/groupchat/projects/${projectId}/chat/messages/read`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ messageIds: [messageId] }),
+  //     });
+  //   } catch (err) {
+  //     console.error('Error marking message as read:', err);
+  //   }
+  // };
 
   // Send message
   const sendMessage = async (e: React.FormEvent) => {
@@ -201,8 +201,8 @@ useEffect(() => {
     if (!hasMore || isLoading) return;
     try {
       await fetchMessages(page + 1);
-    } catch (err) {
-      setError('Failed to load more messages');
+    } catch (err:any) {
+      setError(`Failed to load more messages: ${err.message || err}`);
     }
   };
 
