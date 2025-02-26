@@ -14,7 +14,7 @@ export function useUsers(organizationName: string) {
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to fetch users"
+        description: `Failed to fetch users ${error}`
       });
     }
   });

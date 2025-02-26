@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { setAccount } from "@/redux/slices/accountSlices";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 // Types
 interface Member {
@@ -126,7 +127,7 @@ const getAccountId = async (organizationName: string): Promise<string> => {
     }
     const data = await response.json();
     return data.accountId;
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error getting account ID:', error);
     throw error;
   }
@@ -136,17 +137,14 @@ const getAccountId = async (organizationName: string): Promise<string> => {
 export default function Header() {
   const user = useSelector((state: RootState) => state.user);  // Access Redux state
   const dispatch = useDispatch();
-  const { toast } = useToast()
 
   const [accountId, setAccountId] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showNewChat, setShowNewChat] = useState(false);
   const [fallback, setFallback] = useState<string>("");
-  const [isTModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
@@ -169,7 +167,7 @@ export default function Header() {
       console.log("logged out")
       dispatch(logout())
       window.location.href = '/';
-    } catch (error:any) {
+    } catch (error) {
       console.error('Logout failed:', error);
       // Handle error (show message to user)
     }
@@ -194,7 +192,7 @@ export default function Header() {
         const id = await getAccountId(user.organizationName);
         setAccountId(id);
         dispatch(setAccount({ name: user.organizationName, accountId: id }))
-      } catch (error:any) {
+      } catch (error) {
         console.log("could not find account id",error);
       }
     };
@@ -223,7 +221,7 @@ export default function Header() {
           user: data.user,
           loading: false
         });
-      } catch (error:any) {
+      } catch (error) {
         setAuthState({
           isAuthenticated: false,
           user: null,
@@ -263,13 +261,13 @@ export default function Header() {
       
       </div>
       <nav className="hidden md:flex space-x-4 text-sm">
-        <a href="/" className="hover:underline">Home</a>
-        <a href="#" className="hover:underline">Lineup</a>
-        <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
-        <a href="#" className="hover:underline">Hey!</a>
-        <a onClick={() => (window.location.href = '/assignments')} className="hover:underline cursor-pointer">
+        <Link href="/" className="hover:underline">Home</Link>
+        <Link href="#" className="hover:underline">Lineup</Link>
+        <Link onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</Link>
+        <Link href="#" className="hover:underline">Hey!</Link>
+        <Link href = '/assignments' className="hover:underline cursor-pointer">
           My Assignments
-        </a>
+        </Link>
       </nav>
       <NewChatDialog
         isOpen={showNewChat}

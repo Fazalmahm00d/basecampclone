@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     return Response.json(response.data)
   } catch (error) {
     return Response.json(
-      { error: 'Summarization failed' }, 
+      { error: `Summarization failed ${error}` }, 
       { status: 500 }
     )
   }

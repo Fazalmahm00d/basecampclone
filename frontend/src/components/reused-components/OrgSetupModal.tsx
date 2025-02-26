@@ -31,7 +31,7 @@ const OrganizationSetupModal = () => {
           credentials: 'include'
         });
         const data = await response.json();
-        
+        console.log(response)
         setIsAuthenticated(data.authenticated);
         
         // Only open modal if user is authenticated and has no organization

@@ -65,9 +65,13 @@ export default function UserMerge({ organizationName, adminId}: { organizationNa
         queryClient.invalidateQueries(['users'])
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to merge users" });
+      toast({ title: "Error", description: `Failed to merge users:${error}` });
     }
   };
+
+  if(isLoading){
+    return <div>Loading...</div>
+  }
 
   return (
     <div> { users.length>0 ? <Card>

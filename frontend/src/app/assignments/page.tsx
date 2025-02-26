@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import axios from 'axios';
 import { RootState } from '@/redux/store';
@@ -52,7 +51,7 @@ const user = useSelector((state: RootState) => state.user); // Assuming you have
             <Card key={task._id} className="shadow-md">
               <CardHeader>
                 <CardTitle>{task.name}</CardTitle>
-                <Badge variant={task.isCompleted ? "success" : "warning"}>
+                <Badge variant={task.isCompleted ? "default" : "destructive"}>
                   {task.isCompleted ? "Completed" : "Pending"}
                 </Badge>
               </CardHeader>

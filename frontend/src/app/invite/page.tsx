@@ -51,7 +51,7 @@ const InvitationPage = () => {
             console.log(response.data,"user info after verify invite")
             setIsPasswordDialogOpen(true);
           }
-        } catch (error:any) {
+        } catch (error) {
           if (axios.isAxiosError(error)) {
             console.log("error",error)
             setError(error.response?.data?.error || "Invalid or expired invitation link.");
@@ -139,7 +139,7 @@ const PasswordDialog = ({ isOpen, onClose, onSubmit }: PasswordDialogProps) => {
     try {
       await onSubmit(password);
       onClose();
-    } catch (err:any) {
+    } catch (err) {
       setError(`Failed to set password: ${err.message || err}`);
 
     }

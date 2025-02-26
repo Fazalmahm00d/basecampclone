@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Download, ExternalLink, Eye } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { DialogTitle } from '@radix-ui/react-dialog';
 
@@ -96,7 +96,7 @@ const FileViewerDialog: React.FC<FileViewerDialogProps> = ({ file, onClose }) =>
                   disableFileName: true,
                 },
               }}
-              onError={(e:any) => {
+              onError={(e) => {
                 console.error('DocViewer error:', e);
                 setViewerError(true);
               }}

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer,ToolbarProps  } from 'react-big-calendar';
 import moment from 'moment';
 import { Dialog } from '@/components/ui/dialog';
 import { useSelector } from 'react-redux';
@@ -48,10 +48,9 @@ export interface Event {
   createdBy: string | User;
 }
 
-
 // Custom toolbar component
-const CustomToolbar = (props: any) => {
-  const { onNavigate, onView, label, view } = props;
+
+const CustomToolbar: React.FC<ToolbarProps<object>> = ({ onNavigate, onView, label, view })=> {
 
   return (
     <div className="flex flex-wrap sm:flex-nowrap justify-between items-center p-4 border-b">
@@ -369,7 +368,7 @@ const fetchEvents = async () => {
                 date={date}
                 onNavigate={handleNavigate}
                 components={{
-                toolbar: CustomToolbar
+                  toolbar: CustomToolbar as React.ComponentType<ToolbarProps>,
                 }}
               localizer={localizer}
               events={events}

@@ -1,7 +1,6 @@
 "use client"
 // components/admin/AdminManagement.tsx
 
-import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
@@ -52,9 +51,12 @@ export default function AdminManagement({ organizationName, adminId}: { organiza
         queryClient.invalidateQueries(['users'])
       }
     } catch (error) {
-      toast.success("Error", {description: "Failed to update administrator status" });
+      toast.success("Error", {description: `Failed to update administrator status ${error}` });
     }
   };
+  if(isLoading){
+    return <div>Loading....</div>
+  }
 
   return (
     <div className="space-y-4">

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Select, { MultiValue } from "react-select";
+import Select from "react-select";
 
 interface Option {
   label: string;

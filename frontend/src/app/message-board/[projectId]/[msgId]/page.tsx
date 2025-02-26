@@ -31,7 +31,7 @@ interface Message {
 export default function MessageDetail() {
     const [message, setMessage] = useState<Message | null>(null);
     const [summary, setSummary] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    // const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [replyContent, setReplyContent] = useState("");
     const [isReplying, setIsReplying] = useState(false);
@@ -43,25 +43,25 @@ export default function MessageDetail() {
             fetchMessage();
         }
     }, [params]);
-    const handleSummary = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-        setSummary(null);
+    // const handleSummary = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     setLoading(true);
+    //     setError(null);
+    //     setSummary(null);
     
-        try {
-          const response = await axios.post('/api/summarize', {
-            messages: message?.content,
-          });
+    //     try {
+    //       const response = await axios.post('/api/summarize', {
+    //         messages: message?.content,
+    //       });
     
-          // Get the summary from the response
-          setSummary(response.data.summary);
-        } catch (err) {
-          setError('Failed to summarize the message.');
-        } finally {
-          setLoading(false);
-        }
-      };
+    //       // Get the summary from the response
+    //       setSummary(response.data.summary);
+    //     } catch (err) {
+    //       setError('Failed to summarize the message.');
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
 
     const fetchMessage = async () => {
         try {

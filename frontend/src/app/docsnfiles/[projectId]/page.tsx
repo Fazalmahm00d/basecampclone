@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FolderPlus, Upload, FileText, ArrowLeft, Trash2, Eye } from "lucide-react";
+import { FolderPlus, Upload, FileText, ArrowLeft, Trash2 } from "lucide-react";
 
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 import { useToast } from '@/hooks/use-toast';
@@ -121,9 +121,9 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       
       setFiles(filesResponse.data);
       setFolders(foldersResponse.data);
-    } catch (error) {
+    } catch (error:any) {
       toast({
-        title: "Error",
+        title: `Error:${error}`,
         description: "Failed to fetch contents",
         variant: "destructive"
       });
@@ -210,12 +210,16 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       fetchContents();
     } catch (error) {
       toast({
-        title: "Error",
+        title: `Error:${error}`,
         description: "Failed to delete items",
         variant: "destructive"
       });
     }
   };
+
+  if(isLoading){
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-4 bg-stone-200 h-screen">
@@ -355,7 +359,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
         </div>
         
         {/* Upload Progress */}
-        {uploadProgress > 0 && (
+        {/* {uploadProgress > 0 && (
           <div className="w-48">
             <div className="bg-gray-200 rounded-full h-2.5">
               <div 
@@ -364,7 +368,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
               />
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* File Grid */}

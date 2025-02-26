@@ -1,5 +1,4 @@
 "use client"
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -59,11 +58,11 @@ export default function ProjectGrid() {
   };
   
   // In your component:
-  const { data: projects, isLoading, error } = useQuery({
+  const { data: projects, isLoading } = useQuery({
     queryKey: ['projects', user.organizationName],
     queryFn: () => fetchProjects(user.organizationName),
     enabled: !!user.organizationName,
-    onError: (error:any) => {
+    onError: (error) => {
       console.error('Error fetching projects:', error);
       toast({
         title: "Error",
@@ -119,7 +118,7 @@ export default function ProjectGrid() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-1">
-              {project.members.map((member, index) => (
+              {project.members.map((member) => (
                 <div
                   key={member._id}
                   className="relative group"

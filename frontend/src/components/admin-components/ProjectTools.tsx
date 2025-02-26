@@ -1,6 +1,6 @@
 "use client"
 // components/admin/ProjectTools.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -25,7 +25,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
       // setProjects(data);
       return data
     } catch (error) {
-      toast.error( "Error", { description: "Failed to fetch projects" });
+      toast.error( "Error", { description: `Failed to fetch projects ${error}` });
     }
   };
   const { data: projects, isLoading, error } = useQuery({
@@ -57,7 +57,7 @@ export default function ProjectTools({ organizationName, adminId}: { organizatio
         fetchProjects();
       }
     } catch (error) {
-      toast.error( "Error", {description: "Failed to rename project" });
+      toast.error( "Error", {description: `Failed to rename project ${error}` });
     }
   };
 

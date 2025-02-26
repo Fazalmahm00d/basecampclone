@@ -143,7 +143,7 @@ useEffect(() => {
       
       setHasMore(data.hasMore);
       setPage(pageNum);
-    } catch (err:any) {
+    } catch (err) {
       throw new Error('Error fetching messages',err);
     }
   };
@@ -201,7 +201,7 @@ useEffect(() => {
     if (!hasMore || isLoading) return;
     try {
       await fetchMessages(page + 1);
-    } catch (err:any) {
+    } catch (err) {
       setError(`Failed to load more messages: ${err.message || err}`);
     }
   };

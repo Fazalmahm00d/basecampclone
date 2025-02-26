@@ -40,7 +40,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
           }
         );
         setAvailableMembers(response.data);
-      } catch (error:any) {
+      } catch (error) {
         console.error("Error fetching members:", error);
         toast({
           title: "Error fetching members",
@@ -83,10 +83,10 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
       
       // Close the dialog
       onClose();
-    } catch (error:any) {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create project. Please try again.",
+        description: `Failed to create project. Please try again. ${error}` ,
         variant: "destructive",
       });
       console.log(error);

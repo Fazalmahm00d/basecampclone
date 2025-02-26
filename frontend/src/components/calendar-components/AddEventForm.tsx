@@ -7,6 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Account } from '@/app/calendar/[projectId]/page';
 
+interface EventFormData {
+  title: string;
+  date: string; // Assuming this is in "YYYY-MM-DD" format
+  startTime?: string; // Optional: "HH:MM" format
+  endTime?: string; // Optional: "HH:MM" format
+}
+
+
 interface Project {
     _id: string;
     name: string;
@@ -37,6 +45,15 @@ interface AddEventFormProps {
   project: Project | null;
 }
 
+interface CalendarEvent {
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  project?: string;
+}
+
+
 export const AddEventForm: React.FC<AddEventFormProps> = ({
   selectedDate,
   onSubmit,
@@ -55,14 +72,15 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({
 
   const isAllDay = watch('allDay');
 
-  const handleFormSubmit = (data: any) => {
-    const event = {
+  const handleFormSubmit = (data: EventFormData) => {
+    const event: CalendarEvent = {
       title: data.title,
-      start: new Date(`${data.date}T${isAllDay ? '00:00' : data.startTime}`),
-      end: new Date(`${data.date}T${isAllDay ? '23:59' : data.endTime}`),
+      start: new Date(`${data.date}T${isAllDay ? "00:00" : data.startTime || "00:00"}`),
+      end: new Date(`${data.date}T${isAllDay ? "23:59" : data.endTime || "23:59"}`),
       allDay: isAllDay,
       project: project?._id
     };
+  
     onSubmit(event);
   };
 

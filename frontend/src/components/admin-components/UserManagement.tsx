@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { UserX, UserCog } from "lucide-react";
+import { UserX } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 
 interface User {
@@ -68,7 +68,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch user data",
+        description: `Failed to fetch user data:${error}`,
         variant: "destructive"
       });
     }
@@ -105,7 +105,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to remove member",
+        description: `Failed to remove member:${error}`,
         variant: "destructive"
       });
     }
@@ -138,7 +138,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ organizationName, userI
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update role",
+        description: `Failed to update role:${error}`,
         variant: "destructive"
       });
     }

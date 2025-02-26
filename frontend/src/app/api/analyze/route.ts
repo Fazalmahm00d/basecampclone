@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return Response.json(response.data)
   } catch (error) {
     return Response.json(
-      { error: 'Analyze failed' }, 
+      { error: `Analyze failed ${error}` }, 
       { status: 500 }
     )
   }

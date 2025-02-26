@@ -47,7 +47,7 @@ export default function LoginSignupForm() {
             }
           );
           // console.log('JWT Token:', response.data.token);
-          // console.log('Auth successful');
+          console.log('Auth successful',response);
           toast.success("Authentication success")
           window.location.href = '/dashboard'
         } else {

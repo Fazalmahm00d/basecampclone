@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
 import axios from "axios";
 import ProjectForm from "../project-components/ProjectForm";
 import { toast } from "@/hooks/use-toast";
@@ -49,6 +49,7 @@ export default function ActionButtons() {
           },
         }
       );
+      console.log(response)
 
       setIsModalOpen(false);
       // alert("Invitation sent successfully!");
