@@ -30,9 +30,9 @@ interface Message {
 
 export default function MessageDetail() {
     const [message, setMessage] = useState<Message | null>(null);
-    const [summary, setSummary] = useState<string | null>(null);
+    // const [summary, setSummary] = useState<string | null>(null);
     // const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
     const [replyContent, setReplyContent] = useState("");
     const [isReplying, setIsReplying] = useState(false);
     const router = useRouter();

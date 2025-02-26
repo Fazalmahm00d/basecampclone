@@ -60,7 +60,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const params=useParams()
   const projectId=params.projectId
   // File upload state with progress
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  // const [uploadProgress, setUploadProgress] = useState<number>(0);
   
   useEffect(() => {
     fetchContents();

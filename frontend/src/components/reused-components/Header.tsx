@@ -16,7 +16,6 @@ import {
   DialogTitle 
 } from '@/components/ui/dialog';
 import { setAccount } from "@/redux/slices/accountSlices";
-import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 // Types
@@ -288,13 +287,13 @@ export default function Header() {
     className="absolute top-14 left-0 z-50 w-fit bg-white shadow-md md:hidden rounded-lg"
   >
     <nav className="flex flex-col space-y-2 p-4">
-      <a href="/" className="hover:underline">Home</a>
-      <a href="#" className="hover:underline">Lineup</a>
-      <a onClick={() => setShowNewChat(true)} href="#" className="hover:underline">Pings</a>
-      <a href="#" className="hover:underline">Hey!</a>
-      <a onClick={() => (window.location.href = '/assignments')} className="hover:underline">
+      <Link href="/" className="hover:underline">Home</Link>
+      <Link href="#" className="hover:underline">Lineup</Link>
+      <Link onClick={() => setShowNewChat(true)} href="#"  className="hover:underline">Pings</Link>
+      <Link href="#" className="hover:underline">Hey!</Link>
+      <Link href = '/assignments' className="hover:underline">
         My Assignments
-      </a>
+      </Link>
     </nav>
   </motion.div>
 )}

@@ -31,7 +31,7 @@ const OrganizationSetupModal = () => {
           credentials: 'include'
         });
         const data = await response.json();
-        console.log(response)
+        console.log(response,"response")
         setIsAuthenticated(data.authenticated);
         
         // Only open modal if user is authenticated and has no organization
@@ -66,7 +66,7 @@ const OrganizationSetupModal = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-
+      console.log(response,"response")
       // Update Redux store with new user data
       dispatch(setUser({ ...user, organizationName: orgName }));
       setOpen(false);

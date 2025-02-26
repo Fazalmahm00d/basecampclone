@@ -14,14 +14,14 @@ import {
   Loader2,
   MoreVertical
 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import ProjectMemberDialog from '@/components/project-components/ProjectMemberDialog';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import AiButton from '@/components/animata/button/ai-button';
-import MemberSelect from '@/components/todo-components/MemberSelect';
+// import AiButton from '@/components/animata/button/ai-button';
+// import MemberSelect from '@/components/todo-components/MemberSelect';
 
 interface Member {
   _id: string;
@@ -81,10 +81,10 @@ export default function ProjectPage() {
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [riskAnalysis, setRiskAnalysis] = useState<ProjectMetrics | null>(null);
-  const [riskLoading, setRiskLoading] = useState(false);
-  const [error, setError] = useState<null>(null);
+  // const [tasks, setTasks] = useState<Task[]>([]);
+  // const [riskAnalysis, setRiskAnalysis] = useState<ProjectMetrics | null>(null);
+  // const [riskLoading, setRiskLoading] = useState(false);
+  // const [error, setError] = useState<null>(null);
 
   const handleDocsNavigate=()=>{
     router.push(`/docsnfiles/${params.projectId}`); 
@@ -145,20 +145,20 @@ export default function ProjectPage() {
         setLoading(false);
       }
     };
-      const fetchTasks = async () => {
-        try {
-            const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/status/${params.projectId}/tasks`);
-            if (!response.ok) throw new Error('Failed to fetch tasks');
-            const data = await response.json();
-            setTasks(data);
-        } catch (err) {
-            console.log(err)
-        }
-    };
+    //   const fetchTasks = async () => {
+    //     try {
+    //         const response = await fetch(`https://basecamp-c3ay.onrender.com/api/projects/status/${params.projectId}/tasks`);
+    //         if (!response.ok) throw new Error('Failed to fetch tasks');
+    //         const data = await response.json();
+    //         setTasks(data);
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // };
 
     if (params.projectId) {
       fetchProject();
-      fetchTasks();
+      // fetchTasks();
     }
   }, [params.projectId,toast,project]);
 
@@ -174,7 +174,7 @@ export default function ProjectPage() {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <h2 className="text-xl font-semibold">Project not found</h2>
-        <p className="text-gray-600">The project you're looking for doesn't exist or you don't have access.</p>
+        <p className="text-gray-600">The project you&apos;re looking for doesn&apos;t exist or you don&apos;t have access.</p>
       </div>
     );
   }

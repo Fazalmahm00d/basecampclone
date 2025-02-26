@@ -12,10 +12,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { format } from "date-fns";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 import MemberSelect from "@/components/todo-components/MemberSelect";
 import { Badge } from "@/components/ui/badge";
 
@@ -60,7 +56,6 @@ export default function TodoDetail() {
     const [date, setDate] = useState<Date>();
     const [open, setOpen] = useState(false);
     const router = useRouter();
-    const user = useSelector((state: RootState) => state.user);
     const [selectedMember, setSelectedMember] = useState<string>("");
     const [members, setMembers] = useState<Member[]>([]);
 
