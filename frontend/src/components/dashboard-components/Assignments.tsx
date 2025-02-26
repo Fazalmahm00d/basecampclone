@@ -14,7 +14,7 @@ interface Task {
   name: string;
   description?: string;
   isCompleted: boolean;
-  deadline?: any;
+  deadline?: Date;
   assignedTo: { _id: string; username: string };
   todo: { title: string; project: { name: string } };
 }

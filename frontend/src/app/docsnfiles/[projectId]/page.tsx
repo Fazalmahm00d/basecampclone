@@ -121,7 +121,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       
       setFiles(filesResponse.data);
       setFolders(foldersResponse.data);
-    } catch (error:any) {
+    } catch (error) {
       toast({
         title: `Error:${error}`,
         description: "Failed to fetch contents",

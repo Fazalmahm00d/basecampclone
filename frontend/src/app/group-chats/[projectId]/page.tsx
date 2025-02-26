@@ -156,7 +156,7 @@ useEffect(() => {
       
       const data = await response.json();
       setParticipants(data);
-    } catch (err:any) {
+    } catch (err) {
       throw new Error('Error fetching participants',err);
     }
   };
